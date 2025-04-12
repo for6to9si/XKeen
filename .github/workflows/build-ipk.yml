@@ -51,6 +51,7 @@ jobs:
         ls -al ./
         ls -R ./
         ls -al /opt/sbin/
+        ls -al /home/me/Entware
 
     - name: Install xkeen
       run: |
