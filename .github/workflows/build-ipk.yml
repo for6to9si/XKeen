@@ -22,7 +22,7 @@ jobs:
         # arch: [mipsel, mips, aarch64]
         arch: [mipsel]
     container:
-      image: waujito/entware_builder:${{ matrix.arch }}
+      image: waujito/entware_builder:mipsel-3.4
       options: --user root
       
     steps:
