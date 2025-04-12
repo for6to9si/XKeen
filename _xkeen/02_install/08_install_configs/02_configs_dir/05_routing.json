@@ -1,0 +1,35 @@
+// Настройка маршрутизации
+
+{
+  "routing": {
+    "rules": [
+            
+      // Прямые подключение  |  Доменные имена
+      {
+        "inboundTag": ["redirect", "tproxy"],
+        "domain": [
+		  "regexp:^([\\w\\-\\.]+\\.)ru$",  // .ru
+          "regexp:^([\\w\\-\\.]+\\.)su$",  // .su
+          "regexp:^([\\w\\-\\.]+\\.)xn--p1ai$",  // .рф
+          "regexp:^([\\w\\-\\.]+\\.)xn--p1acf$",  // .рус
+          "regexp:^([\\w\\-\\.]+\\.)xn--80asehdb$",  // .онлайн
+          "regexp:^([\\w\\-\\.]+\\.)xn--c1avg$", // .орг
+          "regexp:^([\\w\\-\\.]+\\.)xn--80aswg$",  // .сайт
+          "regexp:^([\\w\\-\\.]+\\.)xn--80adxhks$",  // .москва
+          "regexp:^([\\w\\-\\.]+\\.)moscow$",  //  .moscow
+          "regexp:^([\\w\\-\\.]+\\.)xn--d1acj3b$"  // .дети
+        ],
+        "outboundTag": "direct",
+        "type": "field"
+      },
+	  
+      // VPS подключение  |  Основное
+      {
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "vless-reality",
+        "type": "field"
+      }
+	  
+    ]
+  }
+}
