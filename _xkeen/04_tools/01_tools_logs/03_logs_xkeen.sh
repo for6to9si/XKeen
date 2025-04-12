@@ -1,4 +1,4 @@
-# Журнал работы xkeen
+# Журнал работы XKeen
 
 logs_packages_info_xkeen() {
     local info_content=""
@@ -85,9 +85,9 @@ logs_cpu_info_xkeen() {
     fi
 
     if [ -n "$architecture" ]; then
-        info_content="$info_content\t[info] Процессор поддерживается xkeen\n"
+        info_content="$info_content\t[info] Процессор поддерживается XKeen\n"
     else
-        error_content="$error_content\t[error] Процессор не поддерживается xkeen\n"
+        error_content="$error_content\t[error] Процессор не поддерживается XKeen\n"
 		fi
 
     if [ -n "$error_content" ]; then
@@ -132,12 +132,6 @@ logs_geosite_info_xkeen() {
     local info_content=""
     local error_content=""
 
-    if [ "$geo_exists_geosite_antizapret" = "installed" ]; then
-        info_content="\t[info] База GeoSite AntiZapret установлена\n"
-    else
-        error_content="\n\t[error] База GeoSite AntiZapret не установлена\n"
-    fi
-
     if [ "$geo_exists_geosite_antifilter" = "installed" ]; then
         info_content="${info_content}	[info] База GeoSite AntiFilter установлена\n"
     else
@@ -149,6 +143,13 @@ logs_geosite_info_xkeen() {
     else
         error_content="${error_content}	[error] База GeoSite v2fly не установлена\n"
     fi
+
+    if [ "$geo_exists_geosite_zkeen" = "installed" ]; then
+        info_content="\t[info] База GeoSite Zkeen установлена\n"
+    else
+        error_content="\n\t[error] База GeoSite Zkeen не установлена\n"
+    fi
+
 
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
@@ -184,6 +185,12 @@ logs_geoip_info_xkeen() {
         error_content="${error_content}\n\t[error] База GeoIP v2fly не установлена\n"
     fi
 
+    if [ "$geo_exists_geoip_zkeenip" = "installed" ]; then
+        info_content="${info_content}\t[info] База GeoIP ZkeenIP установлена\n"
+    else
+        error_content="${error_content}\n\t[error] База GeoIP ZkeenIP не установлена\n"
+    fi
+
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
         echo "[start] Проверка наличия баз данных GeoIP" >> "$xkeen_error_log"
@@ -206,10 +213,10 @@ logs_cron_info_xkeen() {
     local info_content=""
     local error_content=""
 
-    if [ "$info_update_xray_cron" = "installed" ]; then
-        info_content="\t[info] Задача автоматического обновления Xray включена\n"
+    if [ "$info_update_geofile_cron" = "installed" ]; then
+        info_content="${info_content}\t[info] Задача автоматического обновления GeoFile включена"
     else
-        error_content="\t[error] Задача автоматического обновления Xray не включена\n"
+        error_content="${error_content}\t[error] Задача автоматического обновления GeoFile не включена"
     fi
 
     if [ "$info_update_xkeen_cron" = "installed" ]; then
@@ -218,16 +225,10 @@ logs_cron_info_xkeen() {
         error_content="${error_content}\t[error] Задача автоматического обновления Xkeen не включена\n"
     fi
 
-    if [ "$info_update_geoip_cron" = "installed" ]; then
-        info_content="${info_content}\t[info] Задача автоматического обновления GeoIP включена\n"
+    if [ "$info_update_xray_cron" = "installed" ]; then
+        info_content="\t[info] Задача автоматического обновления Xray включена\n"
     else
-        error_content="${error_content}\t[error] Задача автоматического обновления GeoIP не включена\n"
-    fi
-
-    if [ "$info_update_geosite_cron" = "installed" ]; then
-        info_content="${info_content}\t[info] Задача автоматического обновления GeoData включена"
-    else
-        error_content="${error_content}\t[error] Задача автоматического обновления GeoData не включена"
+        error_content="\t[error] Задача автоматического обновления Xray не включена\n"
     fi
 
     if [ -n "$error_content" ]; then
@@ -252,21 +253,21 @@ logs_version_xkeen_info_xkeen() {
     local error_content=""
     local result_content=""
 
-    info_content="\t[info] Установленная версия xkeen: $xkeen_current_version\n\t[info] GitHub версия xkeen: $xkeen_github_version"
+    info_content="\t[info] Установленная версия XKeen: $xkeen_current_version\n\t[info] GitHub версия XKeen: $xkeen_github_version"
 
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
-		echo "[start] Проверка версии xkeen" >> "$xkeen_info_log"
+		echo "[start] Проверка версии XKeen" >> "$xkeen_info_log"
         echo -e "$info_content" >> "$xkeen_info_log"
-        echo "[end] Проверка версии xkeen выполнена" >> "$xkeen_info_log"
+        echo "[end] Проверка версии XKeen выполнена" >> "$xkeen_info_log"
         echo "" >> "$xkeen_info_log"
     fi
 
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
-        echo "[start] Проверка версии xkeen" >> "$xkeen_error_log"
+        echo "[start] Проверка версии XKeen" >> "$xkeen_error_log"
         echo -e "$error_content" >> "$xkeen_error_log"
-        echo "[end] Проверка версии xkeen выполнена" >> "$xkeen_error_log"
+        echo "[end] Проверка версии XKeen выполнена" >> "$xkeen_error_log"
         echo "" >> "$xkeen_error_log"
     fi
 }
@@ -277,27 +278,27 @@ logs_compare_xkeen_info_xkeen() {
     local result_content=""
 
     if [ "$info_compare_xkeen" = "actual" ]; then
-        info_content="[info] Текущая версия $xkeen_current_version xkeen актуальна"
+        info_content="[info] Текущая версия $xkeen_current_version XKeen актуальна"
     elif [ "$info_compare_xkeen" = "update" ]; then
-        info_content="[info] Текущая версия xkeen $xkeen_current_version."
+        info_content="[info] Текущая версия XKeen $xkeen_current_version."
         info_content="${info_content}\n[info] Доступно обновление на версию $xkeen_github_version"
     else
-        info_content="[info] Текущая версия xkeen $xkeen_current_version новее доступной на GitHub $xkeen_github_version"
+        info_content="[info] Текущая версия XKeen $xkeen_current_version новее доступной на GitHub $xkeen_github_version"
     fi
 
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
-		echo "[start] Сравнение версий xkeen" >> "$xkeen_info_log"
+		echo "[start] Сравнение версий XKeen" >> "$xkeen_info_log"
         echo -e "$info_content" | sed -e 's/^/\t/' >> "$xkeen_info_log"
-        echo "[end] Сравнение версий xkeen выполнено" >> "$xkeen_info_log"
+        echo "[end] Сравнение версий XKeen выполнено" >> "$xkeen_info_log"
         echo "" >> "$xkeen_info_log"
     fi
 
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
-        echo "[start] Сравнение версий xkeen" >> "$xkeen_error_log"
+        echo "[start] Сравнение версий XKeen" >> "$xkeen_error_log"
         echo -e "$error_content" | sed -e 's/^/\t/' >> "$xkeen_error_log"
-        echo "[end] Сравнение версий xkeen выполнено" >> "$xkeen_error_log"
+        echo "[end] Сравнение версий XKeen выполнено" >> "$xkeen_error_log"
         echo "" >> "$xkeen_error_log"
     fi
 }
@@ -519,18 +520,18 @@ logs_download_xkeen_info_xkeen() {
 logs_choose_geoip_info_xkeen() {
     local info_content=""
 
-    if [ "$update_antifilter_geoip" = true ]; then
-        if [ -n "$info_content" ]; then
-            info_content="${info_content}\n"
-        fi
-        info_content="${info_content}    [info] Обновить: AntiFilter"
-    fi
-
     if [ "$install_antifilter_geoip" = true ]; then
         if [ -n "$info_content" ]; then
             info_content="${info_content}\n"
         fi
         info_content="${info_content}    [info] Установить: AntiFilter"
+    fi
+
+    if [ "$update_antifilter_geoip" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Обновить: AntiFilter"
     fi
 
     if [ "$install_v2fly_geoip" = true ]; then
@@ -547,6 +548,20 @@ logs_choose_geoip_info_xkeen() {
         info_content="${info_content}    [info] Обновить: v2fly"
     fi
 
+    if [ "$install_zkeenip_geoip" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Установить: ZkeenIP"
+    fi
+
+    if [ "$update_zkeenip_geoip" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Обновить: ZkeenIP"
+    fi
+
     if [ "$chose_delete_geoip_antifilter_select" = true ]; then
         if [ -n "$info_content" ]; then
             info_content="${info_content}\n"
@@ -561,6 +576,13 @@ logs_choose_geoip_info_xkeen() {
         info_content="${info_content}    [info] Удаление: v2fly"
     fi
 
+    if [ "$chose_delete_geoip_zkeenip_select" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Удаление: ZkeenIP"
+    fi
+
     if [ -n "$info_content" ]; then
 		echo "" >> "$xkeen_info_log"
         echo "[start] Выбор пользователя в секции GeoIP" >> "$xkeen_info_log"
@@ -573,18 +595,11 @@ logs_choose_geoip_info_xkeen() {
 logs_choose_geosite_info_xkeen() {
     local info_content=""
 
-    if [ "$update_antizapret_geosite" = true ]; then
+    if [ "$install_antifilter_geosite" = true ]; then
         if [ -n "$info_content" ]; then
             info_content="${info_content}\n"
         fi
-        info_content="${info_content}    [info] Обновить: AntiZapret"
-    fi
-
-    if [ "$install_antizapret_geosite" = true ]; then
-        if [ -n "$info_content" ]; then
-            info_content="${info_content}\n"
-        fi
-        info_content="${info_content}    [info] Установить: AntiZapret"
+        info_content="${info_content}    [info] Установить: AntiFilter"
     fi
 
     if [ "$update_antifilter_geosite" = true ]; then
@@ -592,13 +607,6 @@ logs_choose_geosite_info_xkeen() {
             info_content="${info_content}\n"
         fi
         info_content="${info_content}    [info] Обновить: AntiFilter"
-    fi
-
-    if [ "$install_antifilter_geosite" = true ]; then
-        if [ -n "$info_content" ]; then
-            info_content="${info_content}\n"
-        fi
-        info_content="${info_content}    [info] Установить: AntiFilter"
     fi
 
     if [ "$install_v2fly_geosite" = true ]; then
@@ -615,6 +623,20 @@ logs_choose_geosite_info_xkeen() {
         info_content="${info_content}    [info] Обновить: v2fly"
     fi
 
+    if [ "$install_zkeen_geosite" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Установить: Zkeen"
+    fi
+
+    if [ "$update_zkeen_geosite" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Обновить: Zkeen"
+    fi
+
     if [ "$chose_delete_geosite_antifilter_select" = true ]; then
         if [ -n "$info_content" ]; then
             info_content="${info_content}\n"
@@ -627,6 +649,13 @@ logs_choose_geosite_info_xkeen() {
             info_content="${info_content}\n"
         fi
         info_content="${info_content}    [info] Удаление: v2fly"
+    fi
+
+    if [ "$chose_delete_geosite_zkeen_select" = true ]; then
+        if [ -n "$info_content" ]; then
+            info_content="${info_content}\n"
+        fi
+        info_content="${info_content}    [info] Удаление: Zkeen"
     fi
 
     if [ -n "$info_content" ]; then
@@ -658,6 +687,14 @@ logs_install_geoip_info_xkeen() {
         fi
     fi
 
+    if [ "$install_zkeenip_geoip" = true ]; then
+        if [ -f "$geo_dir/geoip_zkeenip.dat" ]; then
+            info_content="${info_content}\n\t[info] GeoIP ZkeenIP установлена"
+        else
+            error_content="${error_content}\n\t[error] Не удалось установить GeoIP базу ZkeenIP"
+        fi
+    fi
+
     if [ "$update_antifilter_geoip" = true ]; then
         if [ -f "$geo_dir/geoip_antifilter.dat" ]; then
             info_content="${info_content}\n\t[info] GeoIP AntiFilter обновлена"
@@ -674,17 +711,25 @@ logs_install_geoip_info_xkeen() {
         fi
     fi
 
+    if [ "$update_zkeenip_geoip" = true ]; then
+        if [ -f "$geo_dir/geoip_zkeenip.dat" ]; then
+            info_content="${info_content}\n\t[info] GeoIP ZkeenIP обновлена"
+        else
+            error_content="${error_content}\n\t[error] GeoIP ZkeenIP не установлена. Поэтому не может быть обновлена"
+        fi
+    fi
+
     if [ -n "$info_content" ]; then
 	    echo "" >> "$xkeen_info_log"
         echo -e "[start] Установка или обновление GeoIP $info_content" >> "$xkeen_info_log"
-        echo "[end] Установка или обновление GeoIP выполнена" >> "$xkeen_info_log"
+        echo "[end] Установка или обновление GeoIP выполнено" >> "$xkeen_info_log"
 		echo "" >> "$xkeen_info_log"
     fi
 
     if [ -n "$error_content" ]; then
 		echo "" >> "$xkeen_error_log"
         echo -e "[start] Установка или обновление GeoIP $error_content" >> "$xkeen_error_log"
-        echo "[end] Установка или обновление GeoIP выполнена" >> "$xkeen_error_log"
+        echo "[end] Установка или обновление GeoIP выполнено" >> "$xkeen_error_log"
 		echo "" >> "$xkeen_error_log"
     fi
 }
@@ -692,14 +737,6 @@ logs_install_geoip_info_xkeen() {
 logs_install_geosite_info_xkeen() {
     local info_content=""
     local error_content=""
-
-    if [ "$install_antizapret_geosite" = true ]; then
-        if [ -f "$geo_dir/geosite_antizapret.dat" ]; then
-            info_content="${info_content}\n\t[info] GeoSite AntiZapret установлена"
-        else
-            error_content="${error_content}\n\t[error] Не удалось установить GeoSite базу AntiZapret"
-        fi
-    fi
 
     if [ "$install_antifilter_geosite" = true ]; then
         if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
@@ -717,11 +754,11 @@ logs_install_geosite_info_xkeen() {
         fi
     fi
 
-    if [ "$update_antizap_geosite" = true ]; then
-        if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
-            info_content="${info_content}\n\t[info] GeoSite AntiFilter обновлена"
+    if [ "$install_zkeen_geosite" = true ]; then
+        if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
+            info_content="${info_content}\n\t[info] GeoSite Zkeen установлена"
         else
-            error_content="${error_content}\n\t[error] GeoSite AntiFilter  не установлена. Поэтому не может быть обновлена"
+            error_content="${error_content}\n\t[error] Не удалось установить GeoSite базу Zkeen"
         fi
     fi
 
@@ -729,7 +766,7 @@ logs_install_geosite_info_xkeen() {
         if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
             info_content="${info_content}\n\t[info] GeoSite AntiFilter обновлена"
         else
-            error_content="${error_content}\n\t[error] GeoSite AntiFilter  не установлена. Поэтому не может быть обновлена"
+            error_content="${error_content}\n\t[error] GeoSite AntiFilter не установлена. Поэтому не может быть обновлена"
         fi
     fi
 
@@ -741,17 +778,25 @@ logs_install_geosite_info_xkeen() {
         fi
     fi
 
+    if [ "$update_zkeen_geosite" = true ]; then
+        if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
+            info_content="${info_content}\n\t[info] GeoSite Zkeen обновлена"
+        else
+            error_content="${error_content}\n\t[error] GeoSite Zkeen не установлена. Поэтому не может быть обновлена"
+        fi
+    fi
+
     if [ -n "$info_content" ]; then
 	    echo "" >> "$xkeen_info_log"
         echo -e "[start] Установка или обновление GeoSite $info_content" >> "$xkeen_info_log"
-        echo "[end] Установка или обновление GeoSite выполнена" >> "$xkeen_info_log"
+        echo "[end] Установка или обновление GeoSite выполнено" >> "$xkeen_info_log"
 		echo "" >> "$xkeen_info_log"
     fi
 
     if [ -n "$error_content" ]; then
 		echo "" >> "$xkeen_error_log"
         echo -e "[start] Установка или обновление GeoSite $error_content" >> "$xkeen_error_log"
-        echo "[end] Установка или обновление GeoSite выполнена" >> "$xkeen_error_log"
+        echo "[end] Установка или обновление GeoSite выполнено" >> "$xkeen_error_log"
 		echo "" >> "$xkeen_error_log"
     fi
 }
@@ -804,19 +849,17 @@ logs_choose_update_cron_info_xkeen() {
     local has_missing_cron_tasks=false
     local has_updatable_cron_tasks=false
 
+    [ "$chose_geofile_cron_select" != true ] && has_missing_cron_tasks=true
     [ "$chose_xkeen_cron_select" != true ] && has_missing_cron_tasks=true
     [ "$chose_xray_cron_select" != true ] && has_missing_cron_tasks=true
-    [ "$chose_geosite_cron_select" != true ] && has_missing_cron_tasks=true
-    [ "$chose_geoip_cron_select" != true ] && has_missing_cron_tasks=true
 
-    [ "$chose_xkeen_cron_select" = true ] || [ "$chose_xray_cron_select" = true ] || [ "$chose_geosite_cron_select" = true ] || [ "$chose_geoip_cron_select" = true ] && has_updatable_cron_tasks=true
+    [ "$chose_geofile_cron_select" = true ] || [ "$chose_xkeen_cron_select" = true ] || [ "$chose_xray_cron_select" = true ] && has_updatable_cron_tasks=true
 
     if [ "$has_missing_cron_tasks" = true ]; then
         info_content="${info_content}\n\t[info] Будут включены следующие задачи автоматического обновления:\n"
+        [ "$chose_geofile_cron_select" != true ] && info_content="${info_content}\t\t[info] GeoFile\n"
         [ "$chose_xkeen_cron_select" != true ] && info_content="${info_content}\t\t[info] Xkeen\n"
         [ "$chose_xray_cron_select" != true ] && info_content="${info_content}\t\t[info] Xray\n"
-        [ "$chose_geosite_cron_select" != true ] && info_content="${info_content}\t\t[info] GeoSite\n"
-        [ "$chose_geoip_cron_select" != true ] && info_content="${info_content}\t\t[info] GeoIP\n"
     fi
 
     if [ -n "$info_content" ]; then
@@ -832,16 +875,15 @@ logs_choose_cron_time_info_xkeen() {
     local info_content=""
     local result_content=""
 
-    for task in xkeen xray geosite geoip all; do
+    for task in all geofile xkeen xray; do
         task_var="chose_${task}_cron_select"
         time_var="chose_${task}_cron_time"
 
         case $task in
             all) task_name="всех";;
+            geofile) task_name="GeoFile";;
             xkeen) task_name="Xkeen";;
             xray) task_name="Xray";;
-            geosite) task_name="GeoSite";;
-            geoip) task_name="GeoIP";;
         esac
 
         if [ "$(eval echo \${$task_var})" = true ]; then
@@ -889,28 +931,17 @@ logs_install_cron_info_xkeen() {
     cron_file_path="$cron_dir/$cron_file"
     
     if [ -f "$cron_file_path" ]; then
-        if [ -n "$chose_all_cron_time" ] || [ -n "$chose_xkeen_cron_time" ] || [ -n "$chose_xray_cron_time" ] || [ -n "$chose_geosite_cron_time" ] || [ -n "$chose_geoip_cron_time" ]; then
-            if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geoip_cron_time" ]; then
-                if grep -q "$install_dir/xkeen.*-ugic" "$cron_file_path"; then
-                    task="GeoIP"
-                    cron_entry=$(grep "$install_dir/xkeen.*-ugic" "$cron_file_path")
-                    info_content="$info_content\t[info] Запись для задачи автоматического обновления $task существует\n"
-                    info_content="$info_content\t\t[info] $cron_entry\n"
-                    last_line="$cron_entry"
-                else
-                    error_content="$error_content\t[error] Запись для задачи автоматического обновления GeoIP не существует в cron файле\n"
-                fi
-            fi
+        if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geofile_cron_time" ] || [ -n "$chose_xkeen_cron_time" ] || [ -n "$chose_xray_cron_time" ]; then
 
-            if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geosite_cron_time" ]; then
-                if grep -q "$install_dir/xkeen.*-ugsc" "$cron_file_path"; then
-                    task="GeoSite"
-                    cron_entry=$(grep "$install_dir/xkeen.*-ugsc" "$cron_file_path")
+            if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geofile_cron_time" ]; then
+                if grep -q "$install_dir/xkeen.*-ugc" "$cron_file_path"; then
+                    task="GeoFile"
+                    cron_entry=$(grep "$install_dir/xkeen.*-ugc" "$cron_file_path")
                     info_content="$info_content\t[info] Запись для задачи автоматического обновления $task существует\n"
                     info_content="$info_content\t\t[info] $cron_entry\n"
                     last_line="$cron_entry"
                 else
-                    error_content="$error_content\t[error] Запись для задачи автоматического обновления GeoSite не существует в cron файле\n"
+                    error_content="$error_content\t[error] Запись для задачи автоматического обновления GeoFile не существует в cron файле\n"
                 fi
             fi
 
@@ -979,9 +1010,15 @@ logs_delete_geoip_info_xkeen() {
     fi
 
     if [ -f "$geo_dir/geoip_v2fly.dat" ]; then
-        info_content="${info_content}\t[info] Файл geoip_v2fly.dat отсутствует в директории «$geo_dir»"
+        info_content="${info_content}\t[info] Файл geoip_v2fly.dat отсутствует в директории «$geo_dir»\n"
     else
-        error_content="${error_content}\t[error] Файл geoip_v2fly.dat не удален. Возможно его и не было в процессе установки"
+        error_content="${error_content}\t[error] Файл geoip_v2fly.dat не удален. Возможно его и не было в процессе установки\n"
+    fi
+
+    if [ -f "$geo_dir/geoip_zkeenip.dat" ]; then
+        info_content="${info_content}\t[info] Файл geoip_zkeenip.dat отсутствует в директории «$geo_dir»\n"
+    else
+        error_content="${error_content}\t[error] Файл geoip_zkeenip.dat не удален. Возможно его и не было в процессе установки\n"
     fi
 
     if [ -n "$error_content" ]; then
@@ -1011,16 +1048,16 @@ logs_delete_geosite_info_xkeen() {
         error_content="${error_content}\t[error] Файл geosite_antifilter.dat не удален. Возможно его и не было в процессе установки\n"
     fi
 
-    if [ -f "$geo_dir/geosite_antizapret.dat" ]; then
-		info_content="${info_content}\t[info] Файл geosite_antizapret.dat отсутствует в директории «$geo_dir»\n"
-    else
-        error_content="${error_content}\t[error] Файл geosite_antizapret.dat не удален. Возможно его и не было в процессе установки\n"
-    fi
-
     if [ -f "$geo_dir/geosite_v2fly.dat" ]; then
-		info_content="${info_content}\t[info] Файл geosite_v2fly.dat отсутствует в директории «$geo_dir»"	
+		info_content="${info_content}\t[info] Файл geosite_v2fly.dat отсутствует в директории «$geo_dir»\n"	
     else
 		error_content="${error_content}\t[error] Файл geosite_v2fly.dat не удален. Возможно его и не было в процессе установки\n"
+    fi
+
+    if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
+		info_content="${info_content}\t[info] Файл geosite_zkeen.dat отсутствует в директории «$geo_dir»\n"
+    else
+        error_content="${error_content}\t[error] Файл geosite_zkeen.dat не удален. Возможно его и не было в процессе установки\n"
     fi
 
     if [ -n "$error_content" ]; then
@@ -1045,25 +1082,21 @@ logs_delete_cron_task_info_xkeen() {
     
     if [ -f "$cron_dir/$cron_file" ]; then
         if [ "$chose_all_cron_select" = true ] || [ "$chose_delete_all_cron_select" = true ]; then
-            grep -q "ugi\|ugs\|ux\|uk" "$cron_dir/$cron_file"
+            grep -q "ug\|uk\|ux" "$cron_dir/$cron_file"
             if [ $? -eq 1 ]; then
                 info_content="\t[info] Все задачи автоматического обновления удалены из cron"
             fi
         else
+            if [ "$chose_geofile_cron_select" = true ]; then
+                logs_delete_cron_geofile_info_xkeen
+            fi
+
             if [ "$chose_xkeen_cron_select" = true ]; then
                 logs_delete_cron_xkeen_info_xkeen
             fi
             
             if [ "$chose_xray_cron_select" = true ]; then
                 logs_delete_cron_xray_info_xkeen
-            fi
-            
-            if [ "$chose_geosite_cron_select" = true ]; then
-                logs_delete_cron_geosite_info_xkeen
-            fi
-            
-            if [ "$chose_geoip_cron_select" = true ]; then
-                logs_delete_cron_geoip_info_xkeen
             fi
         fi
 
@@ -1077,20 +1110,39 @@ logs_delete_cron_task_info_xkeen() {
     fi
 }
 
+logs_delete_cron_geofile_info_xkeen() {
+    local info_content=""
+    
+    if [ -f "$cron_dir/$cron_file" ]; then
+        grep -q "ug" "$cron_dir/$cron_file"
+        if [ $? -eq 1 ]; then
+            info_content="\t[info] Задача автоматического обновления для GeoFile удалена из cron"
+        fi
+        
+        if [ -n "$info_content" ]; then
+            echo "" >> "$xkeen_info_log"
+            echo "[start] Удаление задачи автоматического обновления GeoFile из cron" >> "$xkeen_info_log"
+            echo -e "$info_content" >> "$xkeen_info_log"
+            echo "[end] Удаление задачи автоматического обновления GeoFile из cron выполнено" >> "$xkeen_info_log"
+            echo "" >> "$xkeen_info_log"
+        fi
+    fi
+}
+
 logs_delete_cron_xkeen_info_xkeen() {
     local info_content=""
     
     if [ -f "$cron_dir/$cron_file" ]; then
         grep -q "uk" "$cron_dir/$cron_file"
         if [ $? -eq 1 ]; then
-            info_content="\t[info] Задача автоматического обновления для Xkeen удалена из cron"
+            info_content="\t[info] Задача автоматического обновления для XKeen удалена из cron"
         fi
         
         if [ -n "$info_content" ]; then
             echo "" >> "$xkeen_info_log"
-            echo "[start] Удаление задачи автоматического обновления Xkeen из cron" >> "$xkeen_info_log"
+            echo "[start] Удаление задачи автоматического обновления XKeen из cron" >> "$xkeen_info_log"
             echo -e "$info_content" >> "$xkeen_info_log"
-            echo "[end] Удаление задачи автоматического обновления Xkeen из cron выполнено" >> "$xkeen_info_log"
+            echo "[end] Удаление задачи автоматического обновления XKeen из cron выполнено" >> "$xkeen_info_log"
             echo "" >> "$xkeen_info_log"
         fi
     fi
@@ -1110,44 +1162,6 @@ logs_delete_cron_xray_info_xkeen() {
             echo "[start] Удаление задачи автоматического обновления Xray из cron" >> "$xkeen_info_log"
             echo -e "$info_content" >> "$xkeen_info_log"
             echo "[end] Удаление задачи автоматического обновления Xray из cron выполнено" >> "$xkeen_info_log"
-            echo "" >> "$xkeen_info_log"
-        fi
-    fi
-}
-
-logs_delete_cron_geosite_info_xkeen() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ugs" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="\t[info] Задача автоматического обновления для GeoSite удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-            echo "" >> "$xkeen_info_log"
-            echo "[start] Удаление задачи автоматического обновления GeoSite из cron" >> "$xkeen_info_log"
-            echo -e "$info_content" >> "$xkeen_info_log"
-            echo "[end] Удаление задачи автоматического обновления GeoSite из cron выполнено" >> "$xkeen_info_log"
-            echo "" >> "$xkeen_info_log"
-        fi
-    fi
-}
-
-logs_delete_cron_geoip_info_xkeen() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ugi" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="\t[info] Задача автоматического обновления для GeoIP удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-            echo "" >> "$xkeen_info_log"
-            echo "[start] Удаление задачи автоматического обновления для GeoIP из cron" >> "$xkeen_info_log"
-            echo -e "$info_content" >> "$xkeen_info_log"
-            echo "[end] Удаление задачи автоматического обновления для GeoIP из cron выполнено" >> "$xkeen_info_log"
             echo "" >> "$xkeen_info_log"
         fi
     fi
@@ -1188,27 +1202,27 @@ logs_register_xray_control_info_xkeen() {
     local info_content=""
     local error_content=""
     
-    control_file_path="$register_dir/xray.control"
+    control_file_path="$register_dir/xray_s.control"
     
     if [ -f "$control_file_path" ]; then
-        info_content="$info_content\t[info] Файл xray.control найден в директории «$register_dir/»"
+        info_content="$info_content\t[info] Файл xray_s.control найден в директории «$register_dir/»"
     else
-        error_content="$error_content\t[error] Файл xray.control не найден в директории «$register_dir/»"
+        error_content="$error_content\t[error] Файл xray_s.control не найден в директории «$register_dir/»"
     fi
     
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
-        echo "[start] Проверка файла xray.control" >> "$xkeen_error_log"
+        echo "[start] Проверка файла xray_s.control" >> "$xkeen_error_log"
         echo -e "$error_content" >> "$xkeen_error_log"
-        echo "[end] Проверка файла xray.control завершилось с ошибками" >> "$xkeen_error_log"
+        echo "[end] Проверка файла xray_s.control завершилось с ошибками" >> "$xkeen_error_log"
         echo "" >> "$xkeen_error_log"
     fi
 
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
-        echo "[start] Проверка файла xray.control" >> "$xkeen_info_log"
+        echo "[start] Проверка файла xray_s.control" >> "$xkeen_info_log"
         echo -e "$info_content" >> "$xkeen_info_log"
-        echo "[end] Проверка файла xray.control выполнено" >> "$xkeen_info_log"
+        echo "[end] Проверка файла xray_s.control выполнено" >> "$xkeen_info_log"
         echo "" >> "$xkeen_info_log"
     fi
 }
@@ -1219,10 +1233,10 @@ logs_register_xray_list_info_xkeen() {
     
     cd "$register_dir/" || exit
 
-    if [ ! -f "xray.list" ]; then
-        error_content="$error_content\t[error] Файл xray.list не найден в директории «$register_dir/»"
+    if [ ! -f "xray_s.list" ]; then
+        error_content="$error_content\t[error] Файл xray_s.list не найден в директории «$register_dir/»"
     else
-        info_content="$info_content\t[info] Файл xray.list найден в директории «$register_dir/»"
+        info_content="$info_content\t[info] Файл xray_s.list найден в директории «$register_dir/»"
     fi
 
     if [ -n "$error_content" ]; then
@@ -1246,7 +1260,7 @@ logs_register_xray_status_info_xkeen() {
     local info_content=""
     local error_content=""
 
-    if grep -q "Package: xray_s" "$status_file"; then
+    if grep -q "Package: xray" "$status_file"; then
         info_content="\t[info] Запись Xray найдена в «$status_file»"
     else
         error_content="\t[error] Запись Xray не найдена в «$status_file»"
@@ -1362,24 +1376,24 @@ logs_register_xkeen_status_info_xkeen() {
     local error_content=""
 
     if grep -q "Package: xkeen" "$status_file"; then
-        info_content="\t[info] Запись Xkeen найдена в «$status_file»"
+        info_content="\t[info] Запись XKeen найдена в «$status_file»"
     else
-        error_content="\t[error] Запись Xkeen не найдена в «$status_file»"
+        error_content="\t[error] Запись XKeen не найдена в «$status_file»"
     fi
     
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
-        echo "[start] Проверка регистрации Xkeen в Status" >> "$xkeen_info_log"
+        echo "[start] Проверка регистрации XKeen в Status" >> "$xkeen_info_log"
         echo -e "$info_content" >> "$xkeen_info_log"
-        echo "[end] Проверка регистрации Xkeen в Status выполнена" >> "$xkeen_info_log"
+        echo "[end] Проверка регистрации XKeen в Status выполнена" >> "$xkeen_info_log"
 		echo "" >> "$xkeen_info_log"
     fi
     
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
-        echo "[start] Проверка регистрации Xkeen в Status" >> "$xkeen_error_log"
+        echo "[start] Проверка регистрации XKeen в Status" >> "$xkeen_error_log"
         echo -e "$error_content" >> "$xkeen_error_log"
-        echo "[end] Проверка регистрации Xkeen в Status выполнена" >> "$xkeen_error_log"
+        echo "[end] Проверка регистрации XKeen в Status выполнена" >> "$xkeen_error_log"
 		echo "" >> "$xkeen_error_log"
     fi
 }
@@ -1389,18 +1403,18 @@ logs_delete_register_xray_info_xkeen() {
     local error_content=""
 
     if [ ! -f "$register_dir/xray_s.list" ]; then
-        info_content="$info_content\t[info] Файл xray.list не найден в директории «$register_dir/»\n"
+        info_content="$info_content\t[info] Файл xray_s.list не найден в директории «$register_dir/»\n"
     else
-        error_content="$error_content\t[error] Файл xray.list найден в директории «$register_dir/»\n"
+        error_content="$error_content\t[error] Файл xray_s.list найден в директории «$register_dir/»\n"
     fi
 
     if [ ! -f "$register_dir/xray_s.control" ]; then
-        info_content="$info_content\t[info] Файл xray.control не найден в директории «$register_dir/»\n"
+        info_content="$info_content\t[info] Файл xray_s.control не найден в директории «$register_dir/»\n"
     else
-        error_content="$error_content\t[error] Файл xray.control найден в директории «$register_dir/»\n"
+        error_content="$error_content\t[error] Файл xray_s.control найден в директории «$register_dir/»\n"
     fi
 
-    if ! grep -q 'Package: xray_s' "$status_file"; then
+    if ! grep -q 'Package: xray' "$status_file"; then
         info_content="$info_content\t[info] Регистрация пакета xray не обнаружена в «$status_file»"
     else
         error_content="$error_content\t[error] Регистрация пакета xray обнаружена в «$status_file»"
@@ -1447,17 +1461,17 @@ logs_delete_register_xkeen_info_xkeen() {
 
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
-        echo "[start] Проверка удаления регистрации Xkeen" >> "$xkeen_error_log"
+        echo "[start] Проверка удаления регистрации XKeen" >> "$xkeen_error_log"
         echo -e "$error_content" | sed 's/^/\t/' >> "$xkeen_error_log"
-        echo "[end] Проверка удаления регистрации Xkeen выполнена" >> "$xkeen_error_log"
+        echo "[end] Проверка удаления регистрации XKeen выполнена" >> "$xkeen_error_log"
         echo "" >> "$xkeen_error_log"
     fi
 
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
-        echo "[start] Проверка удаления регистрации Xkeen" >> "$xkeen_info_log"
+        echo "[start] Проверка удаления регистрации XKeen" >> "$xkeen_info_log"
         echo -e "$info_content" | sed 's/^/\t/' >> "$xkeen_info_log"
-        echo "[end] Проверка удаления регистрации Xkeen выполнена" >> "$xkeen_info_log"
+        echo "[end] Проверка удаления регистрации XKeen выполнена" >> "$xkeen_info_log"
         echo "" >> "$xkeen_info_log"
     fi
 }
@@ -1540,16 +1554,16 @@ logs_file_check_xray_xkeen() {
 		info_content="$info_content\t[info] Файл «geosite_antifilter.dat» найден\n"
 	fi
 
-	if [ ! -f "/opt/etc/xray/dat/geosite_antizapret.dat" ]; then
-		error_content="$error_content\t[error] Файл «geosite_antizapret.dat» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «geosite_antizapret.dat» найден\n"
-	fi
-
 	if [ ! -f "/opt/etc/xray/dat/geosite_v2fly.dat" ]; then
 		error_content="$error_content\t[error] Файл «geosite_v2fly.dat» не найден\n"
 	else
 		info_content="$info_content\t[info] Файл «geosite_v2fly.dat» найден\n"
+	fi
+
+	if [ ! -f "/opt/etc/xray/dat/geosite_zkeen.dat" ]; then
+		error_content="$error_content\t[error] Файл «geosite_zkeen.dat» не найден\n"
+	else
+		info_content="$info_content\t[info] Файл «geosite_zkeen.dat» найден\n"
 	fi
 
 	if [ ! -f "/opt/etc/xray/dat/geoip_antifilter.dat" ]; then
@@ -1564,16 +1578,16 @@ logs_file_check_xray_xkeen() {
 		info_content="$info_content\t[info] Файл «geoip_v2fly.dat» найден\n"
 	fi
 
+	if [ ! -f "/opt/etc/xray/dat/geoip_zkeenip.dat" ]; then
+		error_content="$error_content\t[error] Файл «geoip_zkeenip.dat» не найден\n"
+	else
+		info_content="$info_content\t[info] Файл «geoip_zkeenip.dat» найден\n"
+	fi
+
 	if [ ! -f "/opt/etc/xray/configs/01_log.json" ]; then
 		error_content="$error_content\t[error] Файл «01_log.json» не найден\n"
 	else
 		info_content="$info_content\t[info] Файл «01_log.json» найден\n"
-	fi
-
-	if [ ! -f "/opt/etc/xray/configs/02_transport.json" ]; then
-		error_content="$error_content\t[error] Файл «02_transport.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «02_transport.json» найден\n"
 	fi
 
 	if [ ! -f "/opt/etc/xray/configs/04_inbounds.json" ]; then
@@ -1594,11 +1608,22 @@ logs_file_check_xray_xkeen() {
 		info_content="$info_content\t[info] Файл «05_routing.json» найден\n"
 	fi
 
+	if [ ! -f "/opt/etc/xray/configs/06_policy.json" ]; then
+		error_content="$error_content\t[error] Файл «06_policy.json» не найден\n"
+	else
+		info_content="$info_content\t[info] Файл «06_policy.json» найден\n"
+	fi
 
 	if [ ! -f "/opt/etc/init.d/S24xray" ]; then
 		error_content="$error_content\t[error] Файл «S24xray» не найден\n"
 	else
 		info_content="$info_content\t[info] Файл «S24xray» найден\n"
+	fi
+
+	if [ ! -f "/opt/etc/init.d/S99xkeenstart" ]; then
+		error_content="$error_content\t[error] Файл «S99xkeenstart» не найден\n"
+	else
+		info_content="$info_content\t[info] Файл «S99xkeenstart» найден\n"
 	fi
 
 	if [ ! -f "/opt/var/log/xray/error.log" ]; then
@@ -1827,64 +1852,28 @@ logs_file_check_xkeen_xkeen() {
 		info_content="$info_content\t[info] Файл «01_log.json» найден\n"
 	fi
 
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/02_stats.json" ]; then
-		error_content="$error_content\t[error] Файл «02_stats.json» не найден\n"
+	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/03_inbounds.json" ]; then
+		error_content="$error_content\t[error] Файл «03_inbounds.json» не найден\n"
 	else
-		info_content="$info_content\t[info] Файл «02_stats.json» найден\n"
+		info_content="$info_content\t[info] Файл «03_inbounds.json» найден\n"
 	fi
 
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/03_dns.json" ]; then
-		error_content="$error_content\t[error] Файл «03_dns.json» не найден\n"
+	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/04_outbounds.json" ]; then
+		error_content="$error_content\t[error] Файл «04_outbounds.json» не найден\n"
 	else
-		info_content="$info_content\t[info] Файл «03_dns.json» найден\n"
+		info_content="$info_content\t[info] Файл «04_outbounds.json» найден\n"
 	fi
 
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/04_reverse.json" ]; then
-		error_content="$error_content\t[error] Файл «04_reverse.json» не найден\n"
+	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/05_routing.json" ]; then
+		error_content="$error_content\t[error] Файл «05_routing.json» не найден\n"
 	else
-		info_content="$info_content\t[info] Файл «04_reverse.json» найден\n"
+		info_content="$info_content\t[info] Файл «05_routing.json» найден\n"
 	fi
 
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/05_fake-dns.json" ]; then
-		error_content="$error_content\t[error] Файл «05_fake-dns.json» не найден\n"
+	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/06_policy.json" ]; then
+		error_content="$error_content\t[error] Файл «06_policy.json» не найден\n"
 	else
-		info_content="$info_content\t[info] Файл «05_fake-dns.json» найден\n"
-	fi
-
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/06_transport.json" ]; then
-		error_content="$error_content\t[error] Файл «06_transport.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «06_transport.json» найден\n"
-	fi
-
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/07_inbounds.json" ]; then
-		error_content="$error_content\t[error] Файл «07_inbounds.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «07_inbounds.json» найден\n"
-	fi
-
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/08_outbounds.json" ]; then
-		error_content="$error_content\t[error] Файл «08_outbounds.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «08_outbounds.json» найден\n"
-	fi
-
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/09_policy.json" ]; then
-		error_content="$error_content\t[error] Файл «09_policy.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «09_policy.json» найден\n"
-	fi
-
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/10_routing.json" ]; then
-		error_content="$error_content\t[error] Файл «10_routing.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «10_routing.json» найден\n"
-	fi
-	
-	if [ ! -f "/opt/sbin/.xkeen/02_install/08_install_configs/02_configs_dir/11_fallbacks.json" ]; then
-		error_content="$error_content\t[error] Файл «11_fallbacks.json» не найден\n"
-	else
-		info_content="$info_content\t[info] Файл «11_fallbacks.json» найден\n"
+		info_content="$info_content\t[info] Файл «06_policy.json» найден\n"
 	fi
 
 	if [ ! -f "/opt/sbin/.xkeen/03_delete/00_delete_import.sh" ]; then
@@ -2093,17 +2082,17 @@ logs_file_check_xkeen_xkeen() {
 	
     if [ -n "$error_content" ]; then
         echo "" >> "$xkeen_error_log"
-        echo "[start] Проверка установленных файлов Xkeen" >> "$xkeen_error_log"
+        echo "[start] Проверка установленных файлов XKeen" >> "$xkeen_error_log"
         echo -e "$error_content" | sed '/^$/d' >> "$xkeen_error_log"
-        echo "[end] Проверка установленных файлов Xkeen выполнена" >> "$xkeen_error_log"
+        echo "[end] Проверка установленных файлов XKeen выполнена" >> "$xkeen_error_log"
         echo "" >> "$xkeen_error_log"
     fi
 	
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
-        echo "[start] Проверка установленных файлов Xkeen" >> "$xkeen_info_log"
+        echo "[start] Проверка установленных файлов XKeen" >> "$xkeen_info_log"
         echo -e "$info_content" | sed '/^$/d' >> "$xkeen_info_log"
-        echo "[end] Проверка установленных файлов Xkeen выполнена" >> "$xkeen_info_log"
+        echo "[end] Проверка установленных файлов XKeen выполнена" >> "$xkeen_info_log"
         echo "" >> "$xkeen_info_log"
     fi
 }

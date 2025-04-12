@@ -1,7 +1,12 @@
 # Функция для установки Xray
 install_xray() {
+    # Проверка наличия файла xray и создание резервной копии при необходимости
+    [ -f "$install_dir/xray" ] && backup_xray
+
+    echo -e "  ${yellow}Выполняется установка${reset} Xray. Пожалуйста, подождите..."
+
     # Определение переменных
-    local xray_archive="${tmp_dir}/xray.zip"
+    local xray_archive="${xtmp_dir}/xray.zip"
     local info_content=""
     local error_content=""
 
@@ -9,15 +14,16 @@ install_xray() {
     if [ -f "${xray_archive}" ]; then
         info_content="[info] Архив xray найден\n"
 
-        # Проверка наличия файла xray и создание резервной копии при необходимости
-        [ -f "$install_dir/xray" ] && backup_xray
+        if [ -f "$install_dir/xray" ]; then
+            mv "$install_dir/xray" "$install_dir/xray_bak"
+        fi
 
         # Распаковка архива xray
-        if unzip -q "${xray_archive}" -d "${tmp_dir}/xray"; then
+        if unzip -q "${xray_archive}" -d "${xtmp_dir}/xray"; then
             info_content="${info_content}[info] Распаковка архива xray выполнена\n"
             
             # Перемещение файла xray
-            if mv "${tmp_dir}/xray/xray" $install_dir/; then
+            if mv "${xtmp_dir}/xray/xray" $install_dir/; then
                 info_content="${info_content}[info] Xray успешно установлен в $install_dir/\n"
                 
                 # Установка исполняемых прав для Xray
@@ -41,7 +47,7 @@ install_xray() {
         fi
 
         # Удаление временных файлов
-        if rm -rf "${tmp_dir}/xray"; then
+        if rm -rf "${xtmp_dir}/xray"; then
             info_content="${info_content}[info] Временные файлы удалены\n"
         else
             error_content="${error_content}[error] Ошибка при удалении временных файлов\n"

@@ -4,20 +4,14 @@ install_cron() {
 
     # Создание записей для всех выбранных задач Cron
     if [ -n "$chose_all_cron_time" ]; then
-        cron_entry="$cron_entry\n$chose_all_cron_time $install_dir/xkeen -ugi"
-        cron_entry="$cron_entry\n$chose_all_cron_time $install_dir/xkeen -ugs"
+        cron_entry="$cron_entry\n$chose_all_cron_time $install_dir/xkeen -ug"
         cron_entry="$cron_entry\n$chose_all_cron_time $install_dir/xkeen -uk"
         cron_entry="$cron_entry\n$chose_all_cron_time $install_dir/xkeen -ux"
     fi
 
-    # Добавление задачи Cron для обновления GeoIP
-    if [ -n "$chose_geoip_cron_time" ]; then
-        cron_entry="$cron_entry\n$chose_geoip_cron_time $install_dir/xkeen -ugi"
-    fi
-
-    # Добавление задачи Cron для обновления GeoSite
-    if [ -n "$chose_geosite_cron_time" ]; then
-        cron_entry="$cron_entry\n$chose_geosite_cron_time $install_dir/xkeen -ugs"
+    # Добавление задачи Cron для обновления GeoFile
+    if [ -n "$chose_geofile_cron_time" ]; then
+        cron_entry="$cron_entry\n$chose_geofile_cron_time $install_dir/xkeen -ug"
     fi
 
     # Добавление задачи Cron для обновления Xkeen
@@ -36,8 +30,7 @@ install_cron() {
 
         # Удаляем существующие записи, если выбрано перезаписать или удалить
         if [ -n "$chose_all_cron_select" ] || [ -n "$chose_delete_all_cron_select" ]; then
-            sed -i "/$install_dir\/xkeen.*-ugi/d" "$cron_file_path" 2>/dev/null
-            sed -i "/$install_dir\/xkeen.*-ugs/d" "$cron_file_path" 2>/dev/null
+            sed -i "/$install_dir\/xkeen.*-ug/d" "$cron_file_path" 2>/dev/null
             sed -i "/$install_dir\/xkeen.*-uk/d" "$cron_file_path" 2>/dev/null
             sed -i "/$install_dir\/xkeen.*-ux/d" "$cron_file_path" 2>/dev/null
         fi

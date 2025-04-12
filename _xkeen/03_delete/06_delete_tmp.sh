@@ -8,11 +8,11 @@ delete_tmp() {
         rm "$cron_dir/root.tmp"
     fi
 	
-    if [ -f "/opt/etc/ndm/netfilter.d/xray.sh" ]; then
-        rm "/opt/etc/ndm/netfilter.d/xray.sh"
+    if [ -f "/opt/etc/ndm/netfilter.d/proxy.sh" ]; then
+        rm "/opt/etc/ndm/netfilter.d/proxy.sh"
     fi
 	
-	echo -e "  Выполняется ${yellow}очистка временных файлов${reset} после работы Xkeen"
+	echo -e "  Выполняется ${yellow}очистка временных файлов${reset}"
 	sleep 1
-	echo -e "  Очистка временных файлов ${green}успешно выполнена${reset}"
+	echo -e "  Очистка временных файлов ${green}выполнена${reset}"
 }

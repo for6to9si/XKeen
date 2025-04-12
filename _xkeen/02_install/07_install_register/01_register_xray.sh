@@ -2,7 +2,7 @@
 
 register_xray_control() {
 
-    # Создание файла xray.control
+    # Создание файла xray_s.control
     cat << EOF > "$register_dir/xray_s.control"
 Package: xray_s
 Version: $xray_current_version
@@ -42,6 +42,7 @@ register_xray_list() {
 	echo "/opt/etc/xray" >> xray_s.list
 	echo "/opt/sbin/xray" >> xray_s.list
 	echo "/opt/etc/init.d/S24xray" >> xray_s.list
+	echo "/opt/etc/init.d/S99xkeenstart" >> xray_s.list
 }
 
 register_xray_status() {
@@ -80,7 +81,7 @@ register_xray_status() {
 }
 
 register_xray_initd() {
-	local initd_file="${initd_dir}/S24xray"
+    local initd_file="${initd_dir}/S24xray"
     local s24xray_filename="${current_datetime}_S24xray"
     local backup_path="${backups_dir}/${s24xray_filename}"
     local script_file="${xinstall_dir}/07_install_register/04_register_init.sh"
@@ -91,7 +92,7 @@ register_xray_initd() {
         cp "${script_file}" "${initd_file}"
         chmod +x "${initd_file}"
         chmod 755 "${initd_file}"
-        echo "  Файл автозапуска создан и обновлен"
+        echo -e "  Файл автозапуска ${yellow}создан и обновлен${reset}"
         return
     fi
 
@@ -99,7 +100,7 @@ register_xray_initd() {
     local new_script_version=$(grep -m 1 -E 'Версия:|Version:' "${script_file}" | grep -o '[0-9.]\+')
 
     if [ "${script_version}" = "${new_script_version}" ]; then
-        echo "  Обновление файла автозапуска не требуется"
+        echo -e "  ${yellow}Обновление${reset} файла автозапуска не требуется"
         return
     fi
 
@@ -127,4 +128,57 @@ register_xray_initd() {
 
     chmod +x "${initd_file}"
     chmod 755 "${initd_file}"
+}
+
+register_autostart() {
+    rm -f "${initd_dir}/S99xkeenrestart"
+    if [ -d "${initd_dir}/S99xkeenstart" ]; then
+        rm "${initd_dir}/S99xkeenstart"
+    fi
+    if grep -q 'start_auto="on"' $initd_dir/S24xray; then
+        sed -i 's/start_auto="on"/start_auto="off"/' $initd_dir/S24xray
+    fi
+    update_start_delay 0
+    cat << EOF > "${initd_dir}/S99xkeenstart"
+#!/bin/sh
+#
+autostart="on"
+start_delay=30
+#
+log_info_router() {
+    logger -p notice -t "XKeen" "\$1"
+}
+if [ -d "/opt/etc/init.d/S99xkeenrestart" ]; then
+  rm "/opt/etc/init.d/S99xkeenrestart"
+fi
+if [ "\${autostart}" = "on" ]; then
+    HOST="ya.ru"
+    while true; do
+        log_info_router "Проверка доступности интернета"
+        ping -c 1 "\$HOST" > /dev/null 2>&1
+        if [ \$? -eq 0 ]; then
+        log_info_router "Интернет доступен, выполняется запуск проксирования"
+            sleep \$start_delay
+            xkeen -start
+            break
+        else
+            log_info_router "Интернет не доступен, ожидание доступности..."
+        fi
+        sleep 5
+    done
+fi
+EOF
+
+    chmod +x "${initd_dir}/S99xkeenstart"
+    chmod 755 "${initd_dir}/S99xkeenstart"
+}
+
+# Обновление cron задач для GeoFile
+update_cron_geofile_task() {
+if [ -f "$cron_dir/$cron_file" ]; then
+    tmp_file="$cron_dir/${cron_file}.tmp"
+    cp "$cron_dir/$cron_file" "$tmp_file"
+    grep -v "ugi" "$tmp_file" > "$cron_dir/$cron_file"
+    sed -i 's/\bugs\b/ug/g' "$cron_dir/$cron_file"
+fi
 }

@@ -12,7 +12,7 @@ data_is_updated_donor() {
     fi
 }
 
-data_is_updated_exclude() {
+data_is_updated_excluded() {
     local file=$1
     local new_ports=$2
     local current_ports=$(
@@ -87,6 +87,9 @@ add_ports_donor() {
 	
 	chmod +x $initd_dir/S24xray
 	chmod 755 $initd_dir/S24xray
+
+        $initd_dir/S24xray restart on
+
 }
 
 
@@ -163,6 +166,9 @@ dell_ports_donor() {
     fi
 	chmod +x $initd_dir/S24xray
 	chmod 755 $initd_dir/S24xray
+
+        $initd_dir/S24xray restart on
+
 }
 
 add_ports_exclude() {
@@ -209,7 +215,7 @@ add_ports_exclude() {
     awk -v new="port_exclude=\"$new_ports\"" 'BEGIN{replaced=0} /port_exclude/ && !replaced {sub(/port_exclude="[^"]*"/, new); replaced=1} {print}' $initd_dir/S24xray > "$tmpfile" && mv "$tmpfile" $initd_dir/S24xray
 
     while true; do
-        if data_is_updated_exclude "$initd_dir/S24xray" "$new_ports"; then
+        if data_is_updated_excluded "$initd_dir/S24xray" "$new_ports"; then
             break
         fi
         sleep 1
@@ -226,6 +232,11 @@ add_ports_exclude() {
 			echo -e "  Прокси-клиент ${yellow}уже не работает${reset} с портами$duplicate_ports"
         fi
     fi
+	chmod +x $initd_dir/S24xray
+	chmod 755 $initd_dir/S24xray
+
+        $initd_dir/S24xray restart on
+
 }
 
 
@@ -304,4 +315,9 @@ dell_ports_exclude() {
             fi
         fi
     fi
+	chmod +x $initd_dir/S24xray
+	chmod 755 $initd_dir/S24xray
+
+        $initd_dir/S24xray restart on
+
 }

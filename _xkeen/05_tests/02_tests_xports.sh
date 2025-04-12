@@ -41,7 +41,7 @@ tests_ports_xray() {
                 echo -e "$output"
                 printed=true
             fi
-            echo -e "\n     ${dark_gray}Шлюз${reset} $gateway\n     ${dark_gray}Порт${reset} $port\n     ${dark_gray}Протокол${reset} $protocol"
+            echo -e "\n     ${gray}Шлюз${reset} $gateway\n     ${gray}Порт${reset} $port\n     ${gray}Протокол${reset} $protocol"
         done
     else
         echo -e "  $app_name ${red}не слушает${reset} на каких-либо портах"

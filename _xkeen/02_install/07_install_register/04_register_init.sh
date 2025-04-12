@@ -2,7 +2,7 @@
 
 # Информация о службе
 # Краткое описание: Запуск / Остановка Xray
-# Версия: 2.19
+# Версия: 2.20
 # Если указать в версии «x.x» без кавычек — файл не будет обновляться
 
 # Окружение
@@ -79,8 +79,8 @@ ip6tables_supported=$(command -v ip6tables >/dev/null 2>&1 && echo true || echo 
 
 # Настройки запуска
 start_attempts=10
-start_delay=3
-start_auto="on"
+start_delay=0
+start_auto="off"
 
 # Журналирование
 log_info_router() {
@@ -256,7 +256,8 @@ get_port_redirect() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]')
     if [ -n "${json}" ]; then
-      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "redirect")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
         port=$(echo "${inbound}" | jq -r '.port' 2>/dev/null)
@@ -278,7 +279,8 @@ get_port_tproxy() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]')
     if [ -n "${json}" ]; then
-      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "tproxy")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
         port=$(echo "${inbound}" | jq -r '.port' 2>/dev/null)
@@ -300,7 +302,8 @@ get_network_redirect() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]')
     if [ -n "${json}" ]; then
-      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "redirect")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
         network=$(echo "${inbound}" | jq -r '.settings.network' 2>/dev/null | tr -d '[:space:]' | tr ',' ' ')
@@ -315,14 +318,15 @@ get_network_redirect() {
   done
 
   echo "${network_redirect}"
-  }
+}
 
 # Получить сеть для TProxy
 get_network_tproxy() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]') 
     if [ -n "${json}" ]; then
-      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
+      inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "tproxy")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
         network=$(echo "${inbound}" | jq -r '.settings.network' 2>/dev/null | tr -d '[:space:]' | tr ',' ' ')
@@ -371,9 +375,9 @@ get_port_exclude() {
 # Получить IPv4
 get_exclude_ip4() {
     if [ "$iptables_supported" = true ]; then
-        ipv4_eth=$(ip route get 9.9.9.9 | awk '/src/ {print $NF}' ||
-				ip route get 1.1.1.1 | awk '/src/ {print $NF}' ||
-				ip route get 8.8.8.8 | awk '/src/ {print $NF}'
+        ipv4_eth=$(ip route get 77.88.8.8 | awk '/src/ {print $NF}' ||
+                   ip route get 8.8.8.8 | awk '/src/ {print $NF}' ||
+                   ip route get 1.1.1.1 | awk '/src/ {print $NF}'
 		)
 
         [ -n "$ipv4_eth" ] && ipv4_eth="${ipv4_eth}/32 "
@@ -386,9 +390,9 @@ get_exclude_ip4() {
 # Получить IPv6
 get_exclude_ip6() {
     if [ "$ip6tables_supported" = true ]; then
-        ipv6_eth=$(ip -6 route get 2620:fe::fe | awk '/src/ {print $NF}' || 
-                   ip -6 route get 2606:4700:4700::64 | awk '/src/ {print $NF}' || 
-                   ip -6 route get 2001:4860:4860::8888 | awk '/src/ {print $NF}'
+        ipv6_eth=$(ip -6 route get 2a02:6b8::feed:0ff | awk '/src/ {print $NF}' || 
+                   ip -6 route get 2001:4860:4860::8888 | awk '/src/ {print $NF}' || 
+                   ip -6 route get 2606:4700:4700::1111 | awk '/src/ {print $NF}'
         )
 
         [ -n "$ipv6_eth" ] && ipv6_eth="${ipv6_eth}/128 "

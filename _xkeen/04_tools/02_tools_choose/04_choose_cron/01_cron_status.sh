@@ -4,12 +4,11 @@ choose_update_cron() {
     local has_missing_cron_tasks=false
     local has_updatable_cron_tasks=false
 
+    [ "$info_update_geofile_cron" != "installed" ] && has_missing_cron_tasks=true
     [ "$info_update_xkeen_cron" != "installed" ] && has_missing_cron_tasks=true
     [ "$info_update_xray_cron" != "installed" ] && has_missing_cron_tasks=true
-    [ "$info_update_geosite_cron" != "installed" ] && has_missing_cron_tasks=true
-    [ "$info_update_geoip_cron" != "installed" ] && has_missing_cron_tasks=true
 
-    [ "$info_update_xkeen_cron" = "installed" ] || [ "$info_update_xray_cron" = "installed" ] || [ "$info_update_geosite_cron" = "installed" ] || [ "$info_update_geoip_cron" = "installed" ] && has_updatable_cron_tasks=true
+    [ "$info_update_geofile_cron" = "installed" ] || [ "$info_update_xkeen_cron" = "installed" ] || [ "$info_update_xray_cron" = "installed" ] && has_updatable_cron_tasks=true
 
     echo
     echo
@@ -21,29 +20,27 @@ choose_update_cron() {
     if [ "$has_missing_cron_tasks" = true ]; then
         echo "     1. Включить отсутствующие задачи автоматического обновления"
     else
-        echo -e "     1. ${dark_gray}Все задачи автоматического обновления включены${reset}"
+        echo -e "     1. ${gray}Все задачи автоматического обновления включены${reset}"
     fi
 
     if [ "$has_updatable_cron_tasks" = true ]; then
         echo "     2. Обновить включенные задачи автоматического обновления"
     else
-        echo -e "     2. ${dark_gray}Нет включенных задач автоматического обновления${reset}"
+        echo -e "     2. ${gray}Нет включенных задач автоматического обновления${reset}"
     fi
 
+    [ "$info_update_geofile_cron" != "installed" ] && geofile_choice="Включить" || geofile_choice="Обновить"
     [ "$info_update_xkeen_cron" != "installed" ] && xkeen_choice="Включить" || xkeen_choice="Обновить"
     [ "$info_update_xray_cron" != "installed" ] && xray_choice="Включить" || xray_choice="Обновить"
-    [ "$info_update_geosite_cron" != "installed" ] && geosite_choice="Включить" || geosite_choice="Обновить"
-    [ "$info_update_geoip_cron" != "installed" ] && geoip_choice="Включить" || geoip_choice="Обновить"
 
-    echo "     3. $xkeen_choice Xkeen"
-    echo "     4. $xray_choice Xray"
-    echo "     5. $geosite_choice GeoSite"
-    echo "     6. $geoip_choice GeoIP"
+    echo "     3. $geofile_choice GeoFile"
+    echo "     4. $xkeen_choice Xkeen"
+    echo "     5. $xray_choice Xray"
 
     if [ "$has_updatable_cron_tasks" = true ]; then
         echo "     99. Выключить все"
     else
-        echo -e "     99. ${dark_gray}Нет включенных задач для выключения${reset}"
+        echo -e "     99. ${gray}Нет включенных задач для выключения${reset}"
     fi
 
     echo
@@ -66,6 +63,10 @@ choose_update_cron() {
                 ;;
             1)
                 if [ "$has_missing_cron_tasks" = true ]; then
+
+                    if [ "$info_update_geofile_cron" = "not_installed" ]; then
+                        chose_geofile_cron_select=true
+                    fi
                     if [ "$info_update_xkeen_cron" = "not_installed" ]; then
                         chose_xkeen_cron_select=true
                     fi
@@ -74,20 +75,11 @@ choose_update_cron() {
                         chose_xray_cron_select=true
                     fi
 
-                    if [ "$info_update_geosite_cron" = "not_installed" ]; then
-                        chose_geosite_cron_select=true
-                    fi
-
-                    if [ "$info_update_geoip_cron" = "not_installed" ]; then
-                        chose_geoip_cron_select=true
-                    fi
-
                     if input_concordance_list "Хотите установить единое время для ${yellow}всех${reset} обновлений?"; then
                         chose_all_cron_select=true
+                        chose_geofile_cron_select=false
                         chose_xkeen_cron_select=false
                         chose_xray_cron_select=false
-                        chose_geosite_cron_select=false
-                        chose_geoip_cron_select=false
                     else
                         chose_all_cron_select=false
                     fi
@@ -97,16 +89,14 @@ choose_update_cron() {
                         if input_concordance_list "Хотите обновить задачи?"; then
                             if input_concordance_list "Хотите установить единое время для ${yellow}всех${reset} обновлений?"; then
                                 chose_all_cron_select=true
+                                chose_geofile_cron_select=false
                                 chose_xkeen_cron_select=false
                                 chose_xray_cron_select=false
-                                chose_geosite_cron_select=false
-                                chose_geoip_cron_select=false
                             else
                                 chose_all_cron_select=false
+                                chose_geofile_cron_select=true
                                 chose_xkeen_cron_select=true
                                 chose_xray_cron_select=true
-                                chose_geosite_cron_select=true
-                                chose_geoip_cron_select=true
                             fi
                         else
                             choose_update_cron
@@ -116,6 +106,10 @@ choose_update_cron() {
                 ;;
             2)
                 if [ "$has_updatable_cron_tasks" = true ]; then
+                    if [ "$info_update_geofile_cron" = "installed" ]; then
+                        chose_geofile_cron_select=true
+                    fi
+
                     if [ "$info_update_xkeen_cron" = "installed" ]; then
                         chose_xkeen_cron_select=true
                     fi
@@ -124,20 +118,11 @@ choose_update_cron() {
                         chose_xray_cron_select=true
                     fi
 
-                    if [ "$info_update_geosite_cron" = "installed" ]; then
-                        chose_geosite_cron_select=true
-                    fi
-
-                    if [ "$info_update_geoip_cron" = "installed" ]; then
-                        chose_geoip_cron_select=true
-                    fi
-
                     if input_concordance_list "Хотите установить единое время для ${yellow}всех${reset} обновлений?"; then
                         chose_all_cron_select=true
+                        chose_geofile_cron_select=false
                         chose_xkeen_cron_select=false
                         chose_xray_cron_select=false
-                        chose_geosite_cron_select=false
-                        chose_geoip_cron_select=false
                     else
                         chose_all_cron_select=false
                     fi
@@ -157,39 +142,30 @@ choose_update_cron() {
                 fi
                 ;;
             3)
-                if [ "$info_update_xkeen_cron" = "installed" ]; then
-                    chose_xkeen_cron_select=true
-                    echo -e "  Будет выполнено обновление задачи ${yellow}xkeen${reset}"
+                if [ "$info_update_geofile_cron" = "installed" ]; then
+                    chose_geofile_cron_select=true
+                    echo -e "  Будет выполнено обновление задачи ${yellow}GeoFile${reset}"
                 else
-                    chose_xkeen_cron_select=true
-                    echo -e "  Будет выполнено включение задачи ${yellow}xkeen${reset}"
+                    chose_geofile_cron_select=true
+                    echo -e "  Будет выполнено включение задачи ${yellow}GeoFile${reset}"
                 fi
                 ;;
             4)
+                if [ "$info_update_xkeen_cron" = "installed" ]; then
+                    chose_xkeen_cron_select=true
+                    echo -e "  Будет выполнено обновление задачи ${yellow}XKeen${reset}"
+                else
+                    chose_xkeen_cron_select=true
+                    echo -e "  Будет выполнено включение задачи ${yellow}XKeen${reset}"
+                fi
+                ;;
+            5)
                 if [ "$info_update_xray_cron" = "installed" ]; then
                     chose_xray_cron_select=true
                     echo -e "  Будет выполнено обновление задачи ${yellow}xray${reset}"
                 else
                     chose_xray_cron_select=true
                     echo -e "  Будет выполнено включение задачи ${yellow}xray${reset}"
-                fi
-                ;;
-            5)
-                if [ "$info_update_geosite_cron" = "installed" ]; then
-                    chose_geosite_cron_select=true
-                    echo -e "  Будет выполнено обновление задачи ${yellow}GeoSite${reset}"
-                else
-                    chose_geosite_cron_select=true
-                    echo -e "  Будет выполнено включение задачи ${yellow}GeoSite${reset}"
-                fi
-                ;;
-            6)
-                if [ "$info_update_geoip_cron" = "installed" ]; then
-                    chose_geoip_cron_select=true
-                    echo -e "  Будет выполнено обновление задачи ${yellow}GeoIP${reset}"
-                else
-                    chose_geoip_cron_select=true
-                    echo -e "  Будет выполнено включение задачи ${yellow}GeoIP${reset}"
                 fi
                 ;;
             99)

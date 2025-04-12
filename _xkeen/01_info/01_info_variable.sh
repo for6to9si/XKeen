@@ -1,11 +1,11 @@
 # -------------------------------------
 # Цвета
 # -------------------------------------
-green="\033[32m"      # Зеленый
-red="\033[31m"        # Красный
+green="\033[92m"      # Зеленый
+red="\033[91m"        # Красный
 yellow="\033[33m"     # Желтый
 light_blue="\033[96m" # Голубой
-dark_gray="\e[90m"    # Темно-серый
+gray="\033[37m"       # Серый
 reset="\033[0m"       # Сброс цветов
 
 # -------------------------------------
@@ -13,6 +13,7 @@ reset="\033[0m"       # Сброс цветов
 # -------------------------------------
 tmp_dir_global="/opt/tmp"            # Временная директория общая
 tmp_dir="/opt/tmp/xkeen"             # Временная директория xkeen
+xtmp_dir="/opt/tmp/xray"             # Временная директория xray
 xkeen_log_dir="/opt/var/log/xkeen"   # Директория логов для xkeen
 xray_log_dir="/opt/var/log/xray"     # Директория логов для xray
 initd_dir="/opt/etc/init.d"          # Директория init.d
@@ -31,8 +32,8 @@ releases_dir="/opt/releases"
 os_modules="/lib/modules/$(uname -r)"
 user_modules="/opt/lib/modules"
 app_name=XKeen
-xkeen_current_version="1.1.3"
-init_current_verison="2.19"
+xkeen_current_version="1.1.3.3"
+init_current_version="2.20"
 
 # -------------------------------------
 # Время
@@ -46,8 +47,8 @@ current_datetime=$(date "+%d-%b-%y_%H-%M")
 # -------------------------------------
 # API URL
 # -------------------------------------
-xray_api_url="https://api.github.com/repos/XTLS/Xray-core/releases/tags/v1.8.4"  # url api для xray
-xkeen_api_url="https://api.github.com/repos/skrill0/xkeen/releases/latest"	# url api для xkeen
+xray_api_url="https://api.github.com/repos/XTLS/Xray-core/releases/latest"	# url api для xray
+xkeen_api_url="https://api.github.com/repos/jameszeroX/xkeen/releases/latest"	# url api для xkeen
 
 # -------------------------------------
 # Создание директорий и файлов
