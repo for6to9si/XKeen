@@ -47,7 +47,7 @@ jobs:
       run: |
         ls -al ./
         ls -R ./
-        ls -al /opt/sbin/_xkeen
+        ls -al /opt/sbin/
 
     - name: Install xkeen
       run: |
