@@ -51,6 +51,7 @@ jobs:
 
     - name: Install xkeen
       run: |
+        export PATH="/opt/sbin/:$PATH"
         cd /opt/sbin/_xkeen
         xkeen -i
 
