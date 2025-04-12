@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [mipsel, mips, aarch64]
+        # arch: [mipsel, mips, aarch64]
+        arch: [mipsel]
 
     steps:
     - name: Checkout repository
@@ -31,8 +32,20 @@ jobs:
         sudo apt-get install -y tar gzip jq
 
     - name: Read VERSION and set as environment variable
-      id: version_step
       run: |
         VERSION=$(cat VERSION)
         echo "Текущая версия: $VERSION"
         echo "version=$VERSION" >> $GITHUB_ENV
+        
+    - name: Распаковка xkeen.tar
+      run: |
+        mkdir -p xkeen-${{ env.version }}/opt/sbin
+        mkdir -p xkeen-${{ env.version }}/opt/etc/init.d
+        mkdir -p xkeen-${{ env.version }}/CONTROL
+        tar -xvf xkeen.tar -C xkeen-${{ env.version }}/opt/sbin
+        
+    - name: Display artifacts
+      run: |
+        ls -al ./
+        ls -al xkeen-${{ env.version }}/opt/sbin/.xkeen
+        ls -R ./   
