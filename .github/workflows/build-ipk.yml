@@ -47,5 +47,6 @@ jobs:
     - name: Display artifacts
       run: |
         ls -al ./
-        ls -al xkeen-${{ env.version }}/opt/sbin/.xkeen
-        ls -R ./   
+        ls -R ./
+        ls -al xkeen-${{ env.version }}/opt/sbin/_xkeen
+
