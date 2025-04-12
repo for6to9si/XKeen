@@ -21,7 +21,10 @@ jobs:
       matrix:
         # arch: [mipsel, mips, aarch64]
         arch: [mipsel]
-
+    container:
+      image: waujito/entware_builder:${{ matrix.arch }}
+      options: --user root
+      
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
