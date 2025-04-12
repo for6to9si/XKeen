@@ -1,0 +1,38 @@
+name: Build Xkeen IPK packages
+
+on:
+  release:
+    types: [created] 
+  workflow_dispatch:
+  repository_dispatch:
+  push:
+    tags:
+      - 'v*'
+      
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-ipk:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [mipsel, mips, aarch64]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y tar gzip jq
+
+    - name: Read VERSION and set as environment variable
+      id: version_step
+      run: |
+        VERSION=$(cat VERSION)
+        echo "Текущая версия: $VERSION"
+        echo "version=$VERSION" >> $GITHUB_ENV
