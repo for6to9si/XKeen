@@ -39,14 +39,19 @@ jobs:
         
     - name: Распаковка xkeen.tar
       run: |
-        mkdir -p xkeen-${{ env.version }}/opt/sbin
-        mkdir -p xkeen-${{ env.version }}/opt/etc/init.d
-        mkdir -p xkeen-${{ env.version }}/CONTROL
-        tar -xvf xkeen.tar -C xkeen-${{ env.version }}/opt/sbin
+        mkdir -p /opt/sbin
+        mkdir -p /opt/etc/init.d
+        mkdir -p /CONTROL
+        tar -xvf xkeen.tar -C /opt/sbin
         
     - name: Display artifacts
       run: |
         ls -al ./
         ls -R ./
-        ls -al xkeen-${{ env.version }}/opt/sbin/_xkeen
+        ls -al /opt/sbin/_xkeen
+
+    - name: Install xkeen
+      run: |
+        cd /opt/sbin/_xkeen
+        xkeen -i
 
