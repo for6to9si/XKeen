@@ -62,12 +62,23 @@ jobs:
       run: |
         ls -al ./
         ls -R ./
-        ls -al /xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/opt/sbin/
-        cat xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/CONTROL/control
+        ls -al /xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin/
+        cat xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL/control
 
-    - name: Install xkeen
+    - name: Package IPK
       run: |
-        export PATH="/opt/sbin/:$PATH"
-        cd /opt/sbin/_xkeen
-        xkeen -i
-
+        cd xkeen-${{ env.version }}-${{ matrix.arch }}
+        tar -czf ../data.tar.gz ./opt/sbin ./opt/etc
+        cd ./CONTROL
+        tar -czf ../../control.tar.gz *
+        cd ..
+        echo "2.0" > ../debian-binary
+        cd ..
+        tar -czf xkeen_${{ env.version }}_${{ matrix.arch }}.ipk ./debian-binary ./control.tar.gz ./data.tar.gz
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: xkeen_${{ env.version }}_${{ matrix.arch }} 
+        path: ./*.ipk
+        if-no-files-found: error
