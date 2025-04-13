@@ -103,13 +103,6 @@ jobs:
           echo "Текущая версия: $VERSION"
           echo "version=$VERSION" >> $GITHUB_ENV
 
-      - name: Create Git tag
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git tag ${{ env.version }}
-          git push origin ${{ env.version }}
-
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
