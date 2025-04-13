@@ -36,9 +36,8 @@ jobs:
         VERSION=$(cat VERSION)
         echo "Текущая версия: $VERSION"
         echo "version=$VERSION" >> $GITHUB_ENV
-        source_date_epoch=$(date +%s)
-        echo "SourceDateEpoch: $source_date_epoch"
-        echo "SourceDateEpoch=$source_date_epoch" >> $GITHUB_ENV
+        echo "SourceDateEpoch=$(date +%s)" >> $GITHUB_ENV
+        echo "Installed-Size=$(du -s "./" | cut -f1)" >> $GITHUB_ENV
 
     - name: Create IPK package structure
       run: |
@@ -55,7 +54,7 @@ jobs:
         SourceDateEpoch: ${{ env.SourceDateEpoch }}
         Maintainer: Skrill
         Architecture: ${{ matrix.arch }}-3.4
-        Installed-Size: $(du -s "$install_dir" | cut -f1)
+        Installed-Size: ${{ env.Installed-Size }}
         Description: A unified platform for anti-censorship.
         EOF 
         
