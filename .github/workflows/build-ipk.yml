@@ -34,7 +34,7 @@ jobs:
     - name: Копируем xkeen
       run: |
         mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
-        mv /_xkeen /xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
+        mv ./_xkeen ./xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
 
     - name: Read VERSION and set as environment variable
       run: |
@@ -67,8 +67,8 @@ jobs:
       run: |
         ls -al ./
         ls -R ./
-        # ls -al /xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin/
-        cat xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL/control
+        # ls -al ./xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin/
+        cat ./xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL/control
 
     - name: Package IPK
       run: |
