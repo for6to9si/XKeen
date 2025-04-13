@@ -30,25 +30,26 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y tar gzip jq
+        
+    - name: Set VERSION    
+      run: |
+        VERSION=$(cat VERSION)
+        echo "Текущая версия: $VERSION"
+        echo "version=$VERSION" >> $GITHUB_ENV
 
     - name: Копируем xkeen
       run: |
         mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
         mv ./_xkeen ./xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
 
-    - name: Read VERSION and set as environment variable
+    - name: Set as environment variable
       run: |
-        VERSION=$(cat VERSION)
-        echo "Текущая версия: $VERSION"
-        echo "version=$VERSION" >> $GITHUB_ENV
         echo "Installed-Size=$(du -s xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin | cut -f1)" >> $GITHUB_ENV
         echo "SourceDateEpoch=$(date +%s)" >> $GITHUB_ENV
 
     - name: Create IPK package structure
       run: |
-
-        mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL
-        
+        mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL     
         cat > xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL/control <<EOF
         Package: xray_s
         Version: ${{ env.version }}
