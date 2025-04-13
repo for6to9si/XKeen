@@ -62,7 +62,7 @@ jobs:
       run: |
         ls -al ./
         ls -R ./
-        ls -al /opt/sbin/
+        ls -al /xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/opt/sbin/
         cat xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/CONTROL/control
 
     - name: Install xkeen
