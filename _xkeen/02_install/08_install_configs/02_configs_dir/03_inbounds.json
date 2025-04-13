@@ -1,0 +1,23 @@
+// Исходящее соединение
+
+{
+    "inbounds": [
+        {
+            "tag": "redirect",
+            "port": 61219,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "network": "tcp",
+                "followRedirect": true
+            },
+            "sniffing": {
+				"enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls",
+					"quic"
+                ]
+            }
+        }
+    ]
+}
