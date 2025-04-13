@@ -36,19 +36,32 @@ jobs:
         VERSION=$(cat VERSION)
         echo "Текущая версия: $VERSION"
         echo "version=$VERSION" >> $GITHUB_ENV
-        
-    - name: Распаковка xkeen.tar
+
+    - name: Create IPK package structure
       run: |
-        mkdir -p /opt/sbin
-        mkdir -p /opt/etc/init.d
-        tar -xvf xkeen.tar -C /opt/sbin
+        mkdir -p xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/opt/sbin
+        mkdir -p xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/CONTROL
+        
+        cat > xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/CONTROL/control <<EOF
+        Package: xray_s
+        Version: ${{ steps.version.outputs.version }}
+        Depends: libc, libssp, librt, libpthread, ca-bundle
+        Source: XTLS Team
+        SourceName: xray_s
+        Section: net
+        SourceDateEpoch: $(date +%s)
+        Maintainer: Skrill
+        Architecture: ${{ matrix.arch }}-3.4
+        Installed-Size: $(du -s "$install_dir" | cut -f1)
+        Description: A unified platform for anti-censorship.
+        EOF 
         
     - name: Display artifacts
       run: |
         ls -al ./
         ls -R ./
         ls -al /opt/sbin/
-        ls -al /home/me/Entware
+        cat xkeen-${{ steps.version.outputs.version }}-${{ matrix.arch }}/CONTROL/control
 
     - name: Install xkeen
       run: |
