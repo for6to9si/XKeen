@@ -31,7 +31,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y tar gzip jq
         
-    - name: Set VERSION    
+    - name: Get VERSION    
       run: |
         VERSION=$(cat VERSION)
         echo "Текущая версия: $VERSION"
@@ -41,6 +41,7 @@ jobs:
       run: |
         mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
         mv ./_xkeen ./xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
+        mv ./xkeen ././xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin/
 
     - name: Set as environment variable
       run: |
@@ -64,7 +65,7 @@ jobs:
         Description: A unified platform for anti-censorship.
         EOF 
         
-    - name: Display artifacts
+    - name: Display files
       run: |
         ls -al ./
         ls -R ./
@@ -88,3 +89,43 @@ jobs:
         name: xkeen_${{ env.version }}_${{ matrix.arch }} 
         path: ./*.ipk
         if-no-files-found: error
+
+  deploy-repository:
+    runs-on: ubuntu-latest
+    needs: [build-ipk]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: set VERSION    
+        run: |
+          VERSION=$(cat VERSION)
+          echo "Текущая версия: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag ${{ env.version }}
+          git push origin ${{ env.version }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./
+
+      - name: Display artifacts
+        run: |
+          ls -al ./
+          ls -R ./     
+          
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          title: "Development Build"
+          prerelease: false
+          files: |
+            VERSION
+            */*.ipk
