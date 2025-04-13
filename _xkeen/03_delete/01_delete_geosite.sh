@@ -1,14 +1,8 @@
 # Функция для удаления файлов GeoSite
-delete_geosite() {  
+delete_geosite() {
     if [ "$chose_delete_geosite_antifilter_select" == "true" ]; then
         if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
             rm "$geo_dir/geosite_antifilter.dat"
-        fi
-    fi
-
-    if [ "$chose_delete_geosite_antizapret_select" == "true" ]; then
-        if [ -f "$geo_dir/geosite_antizapret.dat" ]; then
-            rm "$geo_dir/geosite_antizapret.dat"
         fi
     fi
 
@@ -19,9 +13,7 @@ delete_geosite() {
     fi
 	
 	if [ "$chose_delete_geosite_zkeen_select" == "true" ]; then
-        if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
-            rm "$geo_dir/geosite_zkeen.dat"
-        fi
+            rm -f "$geo_dir/zkeen.dat" "$geo_dir/geosite_zkeen.dat"
     fi
 }
 
@@ -31,15 +23,9 @@ delete_geosite_key() {
         rm "$geo_dir/geosite_antifilter.dat"
     fi
 
-    if [ -f "$geo_dir/geosite_antizapret.dat" ]; then
-        rm "$geo_dir/geosite_antizapret.dat"
-    fi
-
     if [ -f "$geo_dir/geosite_v2fly.dat" ]; then
         rm "$geo_dir/geosite_v2fly.dat"
     fi
 	
-	if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
-        rm "$geo_dir/geosite_zkeen.dat"
-    fi
+    rm -f "$geo_dir/zkeen.dat" "$geo_dir/geosite_zkeen.dat"
 }

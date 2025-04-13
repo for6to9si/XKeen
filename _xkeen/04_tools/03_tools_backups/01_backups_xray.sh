@@ -11,7 +11,7 @@ backup_xray() {
             echo -e "  ${red}Ошибка${reset} при создании резервной копии Xray"
         fi
     else
-        echo -e "  ${dark_gray}Xray не установлен.${reset} Создание резервной копии невозможно"
+        echo -e "  ${gray}Xray не установлен.${reset} Создание резервной копии невозможно"
     fi
 }
 
@@ -32,6 +32,6 @@ restore_backup_xray() {
 		echo -e "  ${red}Ошибка${reset} при восстановлении Xray из резервной копии"
         fi
     else
-        echo -e "  ${dark_gray}Нет доступных резервных копий Xray${reset}"
+        echo -e "  ${gray}Нет доступных резервных копий Xray${reset}"
     fi
 }

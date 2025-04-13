@@ -5,9 +5,8 @@ author_donate() {
     echo "  Выберите удобный для Вас способ перевода:"
     echo "     0. Отмена"
     echo "     1. Тинькофф"
-    echo "     2. qiwi"
-    echo "     3. Юmoney"
-    echo "     4. Crypto"
+    echo "     2. Юmoney"
+    echo "     3. Crypto"
 	echo
 
     read -p "  Ваш выбор: " choice
@@ -28,22 +27,13 @@ author_donate() {
         2)
 			echo
             echo -e "  ${yellow}Прямая ссылка${reset}"
-			echo "     qiwi.com/n/21bunny21"
-			echo
-            echo -e "  ${yellow}Никнейм qiwi-кошелька${reset}"
-			echo "     21bunny21"
-			echo
-            ;;
-        3)
-			echo
-            echo -e "  ${yellow}Прямая ссылка${reset}"
 			echo      "yoomoney.ru/to/410018052017678"
 			echo
             echo -e "  ${yellow}Номер Юmoney-кошелька${reset}"
 			echo "     4100 1805 201 7678"
 			echo
             ;;
-        4)
+        3)
 			echo
             echo -e "  ${yellow}usdt${reset}, trc20"
 			echo "     tsc6emx5khk4cpyfkwj7dusybokravxs3m"

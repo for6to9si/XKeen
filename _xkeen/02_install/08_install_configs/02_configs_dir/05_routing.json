@@ -1,35 +1,40 @@
-// Настройка маршрутизации
-
 {
   "routing": {
     "rules": [
-            
-      // Прямые подключение  |  Доменные имена
+//
+      /* Блокировка QUIC */
       {
-        "inboundTag": ["redirect", "tproxy"],
-        "domain": [
-		  "regexp:^([\\w\\-\\.]+\\.)ru$",  // .ru
-          "regexp:^([\\w\\-\\.]+\\.)su$",  // .su
-          "regexp:^([\\w\\-\\.]+\\.)xn--p1ai$",  // .рф
-          "regexp:^([\\w\\-\\.]+\\.)xn--p1acf$",  // .рус
-          "regexp:^([\\w\\-\\.]+\\.)xn--80asehdb$",  // .онлайн
-          "regexp:^([\\w\\-\\.]+\\.)xn--c1avg$", // .орг
-          "regexp:^([\\w\\-\\.]+\\.)xn--80aswg$",  // .сайт
-          "regexp:^([\\w\\-\\.]+\\.)xn--80adxhks$",  // .москва
-          "regexp:^([\\w\\-\\.]+\\.)moscow$",  //  .moscow
-          "regexp:^([\\w\\-\\.]+\\.)xn--d1acj3b$"  // .дети
-        ],
-        "outboundTag": "direct",
-        "type": "field"
+        "network": "udp",
+        "port": "443",
+        "outboundTag": "block"
       },
-	  
-      // VPS подключение  |  Основное
+//            
+      /* Проксируемые домены */
       {
-        "inboundTag": ["redirect", "tproxy"],
-        "outboundTag": "vless-reality",
-        "type": "field"
+        "domain": [
+          "browserleaks.com",
+          "browserleaks.org",
+          "browserleaks.net",
+          "ip.me"
+        ],
+        "outboundTag": "vless-reality"
+      },
+//
+      /* Проксируемые IP */
+      {
+        "ip": [
+          "178.62.9.171" /* myip.ru */
+        ],
+        "outboundTag": "vless-reality"
+      },
+//	  
+      /* Остальной трафик через провайдера */
+      /* Эту секцию редактировать НЕЛЬЗЯ */
+      {
+        "network": "tcp,udp",
+        "outboundTag": "direct"
       }
-	  
+//
     ]
   }
 }

@@ -1,6 +1,8 @@
 # Загрузка Xray
 
 download_xray() {
+    echo -e "  ${yellow}Выполняется загрузка${reset} последней стабильной версии Xray"
+
     # Получение URL для загрузки последней версии Xray с помощью cURL и jq
     download_url=$(curl -s "$xray_api_url" | jq -r --arg arch "$architecture" '.assets[] | select(.name | endswith("linux-"+$arch + ".zip")) | .browser_download_url')
 
@@ -10,16 +12,14 @@ download_xray() {
         extension="${filename##*.}"
         
         # Создание временной директории для загрузки файла
-        mkdir -p "$tmp_dir"
+        mkdir -p "$xtmp_dir"
         
-        echo -e "  ${yellow}Выполняется загрузка${reset} последней стабильной версии Xray"
-
         # Загрузка файла с использованием c URL и сохранение его во временной директории
-        curl -L -o "$tmp_dir/$filename" "$download_url" &> /dev/null
+        curl -L -o "$xtmp_dir/$filename" "$download_url" &> /dev/null
 
         # Если файл был успешно загружен
-        if [ -e "$tmp_dir/$filename" ]; then
-            mv "$tmp_dir/$filename" "$tmp_dir/xray.$extension"
+        if [ -e "$xtmp_dir/$filename" ]; then
+            mv "$xtmp_dir/$filename" "$xtmp_dir/xray.$extension"
 			echo -e "  Xray ${green}успешно загружен${reset}"
         else
             echo -e "  ${red}Ошибка${reset} при загрузке файла"

@@ -1,7 +1,7 @@
 # Определение времени для задач cron
 
 choose_cron_time() {
-    for task in xkeen xray geosite geoip all; do
+    for task in all geofile xkeen xray; do
         task_var="chose_${task}_cron_select"
         time_var="chose_${task}_cron_time"
 

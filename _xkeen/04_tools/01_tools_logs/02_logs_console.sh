@@ -5,9 +5,9 @@ logs_cpu_info_console() {
         echo "     Набор инструкций: $architecture"
 	
     if [ -z "$architecture" ]; then
-        echo -e "  Процессор ${red}не поддерживается${reset} xkeen"
+        echo -e "  Процессор ${red}не поддерживается${reset} XKeen"
     else
-        echo -e "  Процессор ${green}поддерживается${reset} xkeen"
+        echo -e "  Процессор ${green}поддерживается${reset} XKeen"
     fi
 }
 
@@ -38,19 +38,23 @@ logs_delete_geoip_info_console() {
     fi
 
     if [ -f "$geo_dir/geoip_v2fly.dat" ]; then
-        error_content="${error_content}     ${red}Ошибка:${reset} Файл geoip_v2fly.dat не удален"
+        error_content="${error_content}     ${red}Ошибка:${reset} Файл geoip_v2fly.dat не удален\n"
     else
-        info_content="${info_content}     ${green}Успешно:${reset} Файл geoip_v2fly.dat отсутствует в директории «$geo_dir»"
+        info_content="${info_content}     ${green}Успешно:${reset} Файл geoip_v2fly.dat отсутствует в директории «$geo_dir»\n"
+    fi
+
+    if [ -f "$geo_dir/geoip_zkeenip.dat" ]; then
+        error_content="${error_content}     ${red}Ошибка:${reset} Файл geoip_zkeenip.dat не удален\n"
+    else
+        info_content="${info_content}     ${green}Успешно:${reset} Файл geoip_zkeenip.dat отсутствует в директории «$geo_dir»\n"
     fi
 
     if [ -n "$error_content" ]; then
         echo -e "  ${yellow}Проверка${reset} выполнения операции"
         echo -e "$error_content"
     else
-	echo ""
 		echo -e "  ${yellow}Проверка${reset} выполнения операции"
         echo -e "$info_content"
-	echo ""
     fi
 }
 
@@ -64,16 +68,16 @@ logs_delete_geosite_info_console() {
         info_content="     ${green}Успешно:${reset} Файл geosite_antifilter.dat отсутствует в директории «$geo_dir»\n"
     fi
 
-    if [ -f "$geo_dir/geosite_antizapret.dat" ]; then
-        error_content="${error_content}     ${red}Ошибка:${reset} Файл geosite_antizapret.dat не удален\n"
-    else
-        info_content="${info_content}     ${green}Успешно:${reset} Файл geosite_antizapret.dat отсутствует в директории «$geo_dir»\n"
-    fi
-
     if [ -f "$geo_dir/geosite_v2fly.dat" ]; then
         error_content="${error_content}     ${red}Ошибка:${reset} Файл geosite_v2fly.dat не удален\n"
     else
         info_content="${info_content}     ${green}Успешно:${reset} Файл geosite_v2fly.dat отсутствует в директории «$geo_dir»\n"
+    fi
+
+    if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
+        error_content="${error_content}     ${red}Ошибка:${reset} Файл geosite_zkeen.dat не удален\n"
+    else
+        info_content="${info_content}     ${green}Успешно:${reset} Файл geosite_zkeen.dat отсутствует в директории «$geo_dir»\n"
     fi
 
     if [ -n "$error_content" ]; then
@@ -85,48 +89,17 @@ logs_delete_geosite_info_console() {
     fi
 }
 
-
-logs_delete_cron_geoip_info_console() {
+logs_delete_cron_geofile_info_console() {
     local info_content=""
     
     if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ugi" "$cron_dir/$cron_file"
+        grep -q "ug" "$cron_dir/$cron_file"
         if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для GeoIP удалена из cron"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления GeoFile удалена из cron"
         fi
         
         if [ -n "$info_content" ]; then
             echo -e "$info_content"
-        fi
-    fi
-}
-
-logs_delete_cron_geosite_info_console() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ugs" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для GeoSite удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-            echo -e "$info_content"
-        fi
-    fi
-}
-
-logs_delete_cron_xray_info_console() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ux" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для Xray удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-			echo -e "$info_content"
         fi
     fi
 }
@@ -137,7 +110,22 @@ logs_delete_cron_xkeen_info_console() {
     if [ -f "$cron_dir/$cron_file" ]; then
         grep -q "uk" "$cron_dir/$cron_file"
         if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для Xkeen удалена из cron"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления XKeen удалена из cron"
+        fi
+        
+        if [ -n "$info_content" ]; then
+			echo -e "$info_content"
+        fi
+    fi
+}
+
+logs_delete_cron_xray_info_console() {
+    local info_content=""
+    
+    if [ -f "$cron_dir/$cron_file" ]; then
+        grep -q "ux" "$cron_dir/$cron_file"
+        if [ $? -eq 1 ]; then
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления Xray удалена из cron"
         fi
         
         if [ -n "$info_content" ]; then
@@ -263,10 +251,10 @@ logs_register_xray_list_info_console() {
 	
     cd "$register_dir/" || exit
 
-    if [ ! -f "xray.list" ]; then
-        error_content="     ${red}Ошибка:${reset} Файл xray.list не найден в директории «$register_dir/»"
+    if [ ! -f "xray_s.list" ]; then
+        error_content="     ${red}Ошибка:${reset} Файл xray_s.list не найден в директории «$register_dir/»"
     else
-        info_content="     ${green}Успешно:${reset} Файл xray.list найден в директории «$register_dir/»"
+        info_content="     ${green}Успешно:${reset} Файл xray_s.list найден в директории «$register_dir/»"
     fi
 
     if [ -n "$error_content" ]; then
@@ -282,7 +270,7 @@ logs_register_xray_status_info_console() {
     local info_content=""
     local error_content=""
 
-    if grep -q "Package: xray_s" "$status_file"; then
+    if grep -q "Package: xray" "$status_file"; then
         info_content="     ${green}Успешно:${reset} Запись Xray найдена в «$status_file»"
     else
         error_content="     ${red}Ошибка:${reset} Запись Xray не найдена в «$status_file»"
@@ -301,12 +289,12 @@ logs_register_xray_control_info_console() {
     local info_content=""
     local error_content=""
     
-    control_file_path="$register_dir/xray.control"
+    control_file_path="$register_dir/xray_s.control"
     
     if [ -f "$control_file_path" ]; then
-        info_content="     ${green}Успешно:${reset} Файл xray.control найден в директории «$register_dir/»"
+        info_content="     ${green}Успешно:${reset} Файл xray_s.control найден в директории «$register_dir/»"
     else
-        error_content="     ${red}Ошибка:${reset} Файл xray.control не найден в директории «$register_dir/»"
+        error_content="     ${red}Ошибка:${reset} Файл xray_s.control не найден в директории «$register_dir/»"
     fi
     
     if [ -n "$info_content" ]; then
@@ -322,16 +310,16 @@ logs_delete_register_xray_info_console() {
     local info_content=""
     local error_content=""
 
-    if [ ! -f "$register_dir/xray.list" ]; then
-        info_content="     ${green}Успешно:${reset} Файл xray.list не найден в директории «$register_dir/»"
+    if [ ! -f "$register_dir/xray_s.list" ]; then
+        info_content="     ${green}Успешно:${reset} Файл xray_s.list не найден в директории «$register_dir/»"
     else
-        error_content="     ${red}Ошибка:${reset} Файл xray.list найден в директории «$register_dir/»"
+        error_content="     ${red}Ошибка:${reset} Файл xray_s.list найден в директории «$register_dir/»"
     fi
 
-    if [ ! -f "$register_dir/xray.control" ]; then
-        info_content="${info_content}\n     ${green}Успешно:${reset} Файл xray.control не найден в директории «$register_dir/»"
+    if [ ! -f "$register_dir/xray_s.control" ]; then
+        info_content="${info_content}\n     ${green}Успешно:${reset} Файл xray_s.control не найден в директории «$register_dir/»"
     else
-        error_content="${error_content}\n     ${red}Ошибка:${reset} Файл xray.control найден в директории «$register_dir/»"
+        error_content="${error_content}\n     ${red}Ошибка:${reset} Файл xray_s.control найден в директории «$register_dir/»"
     fi
 
     if ! grep -q 'Package: xray' "$status_file"; then
@@ -357,34 +345,22 @@ logs_install_cron_info_console() {
     cron_file_path="$cron_dir/$cron_file"
     
     if [ -f "$cron_file_path" ]; then
-        if [ -n "$chose_all_cron_time" ] || [ -n "$chose_xkeen_cron_time" ] || [ -n "$chose_xray_cron_time" ] || [ -n "$chose_geosite_cron_time" ] || [ -n "$chose_geoip_cron_time" ]; then
-            if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geoip_cron_time" ]; then
-                if grep -q "$install_dir/xkeen.*-ugi" "$cron_file_path"; then
-                    task="GeoIP"
-                    cron_entry=$(grep "$install_dir/xkeen.*-ugi" "$cron_file_path")
+        if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geofile_cron_time" ] || [ -n "$chose_xkeen_cron_time" ] || [ -n "$chose_xray_cron_time" ]; then
+            if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geofile_cron_time" ]; then
+                if grep -q "$install_dir/xkeen.*-ug" "$cron_file_path"; then
+                    task="GeoFile"
+                    cron_entry=$(grep "$install_dir/xkeen.*-ug" "$cron_file_path")
                     info_content="     ${green}Успешно:${reset} Запись для задачи автоматического обновления $task существует"
                     info_content="${info_content}\n     ${green}Успешно:${reset} $cron_entry"
                     last_line="$cron_entry"
                 else
-                    error_content="     ${red}Ошибка:${reset} Запись для задачи автоматического обновления GeoIP не существует в cron файле"
-                fi
-            fi
-
-            if [ -n "$chose_all_cron_time" ] || [ -n "$chose_geosite_cron_time" ]; then
-                if grep -q "$install_dir/xkeen.*-ugs" "$cron_file_path"; then
-                    task="GeoSite"
-                    cron_entry=$(grep "$install_dir/xkeen.*-ugs" "$cron_file_path")
-                    info_content="${info_content}\n     ${green}Успешно:${reset} Запись для задачи автоматического обновления $task существует"
-                    info_content="${info_content}\n     ${green}Успешно:${reset} $cron_entry"
-                    last_line="$cron_entry"
-                else
-                    error_content="${error_content}\n     ${red}Ошибка:${reset} Запись для задачи автоматического обновления GeoSite не существует в cron файле"
+                    error_content="     ${red}Ошибка:${reset} Запись для задачи автоматического обновления GeoFile не существует в cron файле"
                 fi
             fi
 
             if [ -n "$chose_all_cron_time" ] || [ -n "$chose_xkeen_cron_time" ]; then
                 if grep -q "$install_dir/xkeen.*-uk" "$cron_file_path"; then
-                    task="Xkeen"
+                    task="XKeen"
                     cron_entry=$(grep "$install_dir/xkeen.*-uk" "$cron_file_path")
                     info_content="${info_content}\n     ${green}Успешно:${reset} Запись для задачи автоматического обновления $task существует"
                     info_content="${info_content}\n     ${green}Успешно:${reset} $cron_entry"
@@ -447,11 +423,19 @@ logs_install_geoip_info_console() {
         fi
     fi
 
+    if [ "$install_zkeenip_geoip" = true ]; then
+        if [ -f "$geo_dir/geoip_zkeenip.dat" ]; then
+            info_content="${info_content}\n     ${green}Успешно:${reset} GeoIP ZkeenIP установлена"
+        else
+            error_content="${error_content}\n     ${red}Ошибка:${reset} Не удалось установить GeoIP базу ZkeenIP"
+        fi
+    fi
+
     if [ "$update_antifilter_geoip" = true ]; then
         if [ -f "$geo_dir/geoip_antifilter.dat" ]; then
             info_content="${info_content}\n     ${green}Успешно:${reset} GeoIP AntiFilter обновлена"
         else
-            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoIP AntiFilter  не установлена. Поэтому не может быть обновлена"
+            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoIP AntiFilter не установлена. Поэтому не может быть обновлена"
         fi
     fi
 
@@ -460,6 +444,14 @@ logs_install_geoip_info_console() {
             info_content="${info_content}\n     ${green}Успешно:${reset} GeoIP v2fly обновлена"
         else
             error_content="${error_content}\n     ${red}Ошибка:${reset} GeoIP v2fly не установлена. Поэтому не может быть обновлена"
+        fi
+    fi
+
+    if [ "$update_zkeenip_geoip" = true ]; then
+        if [ -f "$geo_dir/geoip_zkeenip.dat" ]; then
+            info_content="${info_content}\n     ${green}Успешно:${reset} GeoIP ZkeenIP обновлена"
+        else
+            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoIP ZkeenIP не установлена. Поэтому не может быть обновлена"
         fi
     fi
 
@@ -479,14 +471,6 @@ logs_install_geosite_info_console() {
     local info_content=""
     local error_content=""
 
-    if [ "$install_antizapret_geosite" = true ]; then
-        if [ -f "$geo_dir/geosite_antizapret.dat" ]; then
-            info_content="     ${green}Успешно:${reset} GeoSite AntiZapret установлена"
-        else
-            error_content="     ${red}Ошибка:${reset} Не удалось установить GeoSite базу AntiZapret"
-        fi
-    fi
-
     if [ "$install_antifilter_geosite" = true ]; then
         if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
             info_content="${info_content}\n     ${green}Успешно:${reset} GeoSite AntiFilter установлена"
@@ -503,11 +487,11 @@ logs_install_geosite_info_console() {
         fi
     fi
 
-    if [ "$update_antizap_geosite" = true ]; then
-        if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
-            info_content="${info_content}\n     ${green}Успешно:${reset} GeoSite AntiFilter обновлена"
+    if [ "$install_zkeen_geosite" = true ]; then
+        if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
+            info_content="${info_content}\n     ${green}Успешно:${reset} GeoSite Zkeen установлена"
         else
-            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoSite AntiFilter  не установлена. Поэтому не может быть обновлена"
+            error_content="${error_content}\n     ${red}Ошибка:${reset} Не удалось установить GeoSite базу Zkeen"
         fi
     fi
 
@@ -515,7 +499,7 @@ logs_install_geosite_info_console() {
         if [ -f "$geo_dir/geosite_antifilter.dat" ]; then
             info_content="${info_content}\n     ${green}Успешно:${reset} GeoSite AntiFilter обновлена"
         else
-            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoSite AntiFilter  не установлена. Поэтому не может быть обновлена"
+            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoSite AntiFilter не установлена. Поэтому не может быть обновлена"
         fi
     fi
 
@@ -524,6 +508,14 @@ logs_install_geosite_info_console() {
             info_content="${info_content}\n     ${green}Успешно:${reset} GeoSite v2fly обновлена"
         else
             error_content="${error_content}\n     ${red}Ошибка:${reset} GeoSite v2fly не установлена. Поэтому не может быть обновлена"
+        fi
+    fi
+
+    if [ "$update_zkeen_geosite" = true ]; then
+        if [ -f "$geo_dir/geosite_zkeen.dat" ]; then
+            info_content="${info_content}\n     ${green}Успешно:${reset} GeoSite Zkeen обновлена"
+        else
+            error_content="${error_content}\n     ${red}Ошибка:${reset} GeoSite Zkeen не установлена. Поэтому не может быть обновлена"
         fi
     fi
 
@@ -575,14 +567,14 @@ logs_install_configs_info_console() {
     fi
 }
 
-logs_delete_cron_geosite_info_console() {
+logs_delete_cron_geofile_info_console() {
     local info_content=""
     
     if [ -f "$cron_dir/$cron_file" ]; then
-        if grep -q "ugs" "$cron_dir/$cron_file"; then
-            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для GeoSite найдена в Cron\n"
+        if grep -q "ug" "$cron_dir/$cron_file"; then
+            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для GeoFile найдена в Cron\n"
         else
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для GeoSite не найдена Cron\n"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для GeoFile не найдена Cron\n"
         fi
         
         if [ -n "$info_content" ]; then
@@ -598,9 +590,9 @@ logs_delete_cron_xkeen_info_console() {
     if [ -f "$cron_dir/$cron_file" ]; then
         grep -q "uk" "$cron_dir/$cron_file"
         if [ $? -eq 0 ]; then
-            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для Xkeen найдена в Cron\n"
+            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для XKeen найдена в Cron\n"
         else
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для Xkeen не найдена в Cron\n"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для XKeen не найдена в Cron\n"
         fi
         
         if [ -n "$info_content" ]; then
@@ -618,23 +610,6 @@ logs_delete_cron_xray_info_console() {
             error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для Xray найдена в Cron\n"
         else
             info_content="     ${green}Успешно:${reset} Задача автоматического обновления для Xray не найдена в Cron\n"
-        fi
-        
-        if [ -n "$info_content" ]; then
-            echo -e "$info_content"
-        fi
-    fi
-}
-
-logs_delete_cron_geoip_info_console() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ugi" "$cron_dir/$cron_file"
-        if [ $? -eq 0 ]; then
-            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для GeoIP найдена в Cron\n"
-        else
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для GeoIP не найдена в Cron\n"
         fi
         
         if [ -n "$info_content" ]; then

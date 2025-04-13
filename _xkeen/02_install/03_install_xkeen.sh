@@ -20,9 +20,8 @@ tar xf "${xkeen_archive}" -C "${install_dir}" xkeen _xkeen
 if [ -d "${install_dir}/_xkeen" ]; then
     rm -rf "${install_dir}/.xkeen"
     mv "${install_dir}/_xkeen" "${install_dir}/.xkeen"
-    echo "  Установка xkeen завершена"
 else
-    echo "  Ошибка: _xkeen не была правильно перенесена."
+    echo -e "  ${red}Ошибка:${reset} _xkeen не была правильно перенесена"
 fi
 
 # Удаление архива
