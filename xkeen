@@ -1,7 +1,19 @@
 #!/bin/sh
 
 # Определение директории, где находится xkeen.sh
-script_dir="$(cd "$(dirname "$0")" && pwd)"
+# Добавляю декларии для удобной работы в VSCODE + плагин "BASH IDE", Clion + "Shell Script" от компаниии JetBrains, потом раскоментировать
+#script_dir="$(cd "$(dirname "$0")" && pwd)"
+
+# Блок для удаления
+# Integration with external tools (ShellCheck, Shfmt, Explainshell)
+script_dir=./
+
+# Модуль информации
+. _xkeen/01_info/03_info_cpu.sh
+. _xkeen/01_info/05_info_geosite.sh
+
+
+
 
 # Скрываем основную директорию xkeen
 install_xkeen_rename() {
