@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # arch: [mipsel, mips, aarch64]
-        arch: [mipsel]
+        arch: [mipsel, mips, aarch64]
+        #arch: [mipsel]
         
     steps:
     - name: Checkout repository
@@ -127,5 +127,4 @@ jobs:
           title: "Development Build"
           prerelease: false
           files: |
-            VERSION
             */*.ipk
