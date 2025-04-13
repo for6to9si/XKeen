@@ -36,7 +36,7 @@ jobs:
         VERSION=$(cat VERSION)
         echo "Текущая версия: $VERSION"
         echo "version=$VERSION" >> $GITHUB_ENV
-        source_date_epoch = $(date +%s)
+        source_date_epoch=$(date +%s)
         echo "SourceDateEpoch: $source_date_epoch"
         echo "SourceDateEpoch=$source_date_epoch" >> $GITHUB_ENV
 
