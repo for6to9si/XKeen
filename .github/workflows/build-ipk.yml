@@ -26,22 +26,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up environment
+    - name: Set up environment ubuntu 
       run: |
         sudo apt-get update
         sudo apt-get install -y tar gzip jq
+
+    - name: Копируем xkeen
+      run: |
+        mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
+        mv /_xkeen /xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
 
     - name: Read VERSION and set as environment variable
       run: |
         VERSION=$(cat VERSION)
         echo "Текущая версия: $VERSION"
         echo "version=$VERSION" >> $GITHUB_ENV
+        echo "Installed-Size=$(du -s xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin | cut -f1)" >> $GITHUB_ENV
         echo "SourceDateEpoch=$(date +%s)" >> $GITHUB_ENV
-        echo "Installed-Size=$(du -s "./" | cut -f1)" >> $GITHUB_ENV
 
     - name: Create IPK package structure
       run: |
-        mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin
+
         mkdir -p xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL
         
         cat > xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL/control <<EOF
@@ -62,7 +67,7 @@ jobs:
       run: |
         ls -al ./
         ls -R ./
-        ls -al /xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin/
+        # ls -al /xkeen-${{ env.version }}-${{ matrix.arch }}/opt/sbin/
         cat xkeen-${{ env.version }}-${{ matrix.arch }}/CONTROL/control
 
     - name: Package IPK
