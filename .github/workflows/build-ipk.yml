@@ -74,7 +74,7 @@ jobs:
     - name: Package IPK
       run: |
         cd xkeen-${{ env.version }}-${{ matrix.arch }}
-        tar -czf ../data.tar.gz ./opt/sbin ./opt/etc
+        tar -czf ../data.tar.gz ./opt/sbin 
         cd ./CONTROL
         tar -czf ../../control.tar.gz *
         cd ..
