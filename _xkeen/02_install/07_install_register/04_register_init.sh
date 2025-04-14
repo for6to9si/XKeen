@@ -22,6 +22,7 @@ name_profile="xkeen"
 name_chain="xkeen"
 name_prerouting_chain="${name_chain}"
 name_output_chain="${name_chain}_mask"
+export XRAY_RAY_BUFFER_SIZE=4
 
 # Директории
 directory_entware="/opt"
@@ -663,6 +664,7 @@ then
 						active_table="mangle"
 						if [ "\${family}" = "iptables" ] && [ "\${iptables_supported}" = "true" ] && ! iptables -t "\${active_table}" -C PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1; then
 							iptables -t "\${active_table}" -A PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1
+							iptables -t "\${active_table}" -A PREROUTING -m connmark ! --mark \${policy_mark} -m conntrack ! --ctstate INVALID -p udp -m multiport --dports 53 -j \${name_prerouting_chain} >/dev/null 2>&1
 						fi
 						if [ "\${family}" = "ip6tables" ] && [ "\${ip6tables_supported}" = "true" ] && ! ip6tables -t "\${active_table}" -C PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1; then
 							ip6tables -t "\${active_table}" -A PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1

@@ -9,8 +9,70 @@
 script_dir=./
 
 # Модуль информации
+. _xkeen/01_info/00_info_import.sh
+. _xkeen/01_info/01_info_variable.sh
+. _xkeen/01_info/02_info_packages.sh
 . _xkeen/01_info/03_info_cpu.sh
+. _xkeen/01_info/04_info_xray.sh
 . _xkeen/01_info/05_info_geosite.sh
+. _xkeen/01_info/06_info_geoip.sh
+. _xkeen/01_info/07_info_cron.sh
+. _xkeen/01_info/08_info_version/01_version_xkeen.sh
+. _xkeen/01_info/08_info_version/02_version_xray.sh
+
+
+# Модуль установки
+. _xkeen/02_install/00_install_import.sh
+
+. _xkeen/02_install/01_install_packages.sh
+. _xkeen/02_install/02_install_xray.sh
+. _xkeen/02_install/03_install_xkeen.sh
+. _xkeen/02_install/04_install_geosite.sh
+. _xkeen/02_install/05_install_geoip.sh
+. _xkeen/02_install/06_install_cron.sh
+
+. _xkeen/02_install/07_install_register/00_register_import.sh
+
+. _xkeen/02_install/07_install_register/01_register_xray.sh
+. _xkeen/02_install/07_install_register/02_register_xkeen.sh
+. _xkeen/02_install/07_install_register/03_register_cron.sh
+
+. _xkeen/02_install/08_install_configs/00_configs_import.sh
+
+. _xkeen/02_install/08_install_configs/01_configs_install.sh
+
+
+# Модуль удаления
+
+. _xkeen/03_delete/00_delete_import.sh
+
+. _xkeen/03_delete/01_delete_geosite.sh
+. _xkeen/03_delete/02_delete_geoip.sh
+. _xkeen/03_delete/03_delete_cron.sh
+. _xkeen/03_delete/04_delete_configs.sh
+. _xkeen/03_delete/05_delete_register.sh
+. _xkeen/03_delete/06_delete_tmp.sh
+
+# Модуль инструментария
+. _xkeen/04_tools/00_tools_import.sh
+. _xkeen/04_tools/05_tools_archive.sh
+. _xkeen/04_tools/06_tools_ports.sh
+. _xkeen/04_tools/07_tools_module.sh
+. _xkeen/04_tools/08_tools_diagnostic.sh
+. _xkeen/04_tools/09_tools_delay.sh
+. _xkeen/04_tools/10_tools_fixed.sh
+. _xkeen/04_tools/04_tools_downloaders/01_downloaders_xray.sh
+. _xkeen/04_tools/04_tools_downloaders/02_donwloaders_xkeen.sh
+. _xkeen/04_tools/03_tools_backups/01_backups_xray.sh
+. _xkeen/04_tools/03_tools_backups/02_backups_configs.sh
+. _xkeen/04_tools/03_tools_backups/02_backups_xkeen.sh
+
+
+# Модуль тестирования
+. _xkeen/05_tests/00_tests_import.sh
+
+# Модуль тестирования
+. _xkeen/author.sh
 
 
 
