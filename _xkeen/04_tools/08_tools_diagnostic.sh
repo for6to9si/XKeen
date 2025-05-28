@@ -99,6 +99,10 @@ echo "" >> "$diagnostic"
 # 10. Запрос версии Xray
 write_header "Версия Xray"
 xray -version >> "$diagnostic" 
+echo "Разрешено файловых дескрипторов:" >> "$diagnostic"
+grep 'Max open files' "/proc/$(pidof xray)/limits" | awk '{print $4}' >> "$diagnostic" 
+echo "Использовано файловых дескрипторов:" >> "$diagnostic"
+ls -l /proc/$(pidof xray)/fd | wc -l >> "$diagnostic" 
 echo "" >> "$diagnostic"
 echo "" >> "$diagnostic"
 
@@ -115,5 +119,5 @@ fi
 echo ""
 echo "  Диагностика закончилась"
 echo "  Если требуется, можете включить XKeen"
-echo "  Отправьте файл по пути «$diagnostic» в тему XKeen или в личные сообщения Skrill0"
+echo "  Отправьте файл по пути «$diagnostic» в телеграм-чат XKeen, подробно описав возникшую проблему"
 }

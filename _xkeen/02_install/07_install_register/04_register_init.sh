@@ -2,7 +2,7 @@
 
 # Информация о службе
 # Краткое описание: Запуск / Остановка Xray
-# Версия: 2.20
+# Версия: 2.23
 # Если указать в версии «x.x» без кавычек — файл не будет обновляться
 
 # Окружение
@@ -22,7 +22,6 @@ name_profile="xkeen"
 name_chain="xkeen"
 name_prerouting_chain="${name_chain}"
 name_output_chain="${name_chain}_mask"
-export XRAY_RAY_BUFFER_SIZE=4
 
 # Директории
 directory_entware="/opt"
@@ -77,16 +76,26 @@ port_dns="53"
 iptables_supported=$(command -v iptables >/dev/null 2>&1 && echo true || echo false)
 ip6tables_supported=$(command -v ip6tables >/dev/null 2>&1 && echo true || echo false)
 
-
 # Настройки запуска
 start_attempts=10
 start_delay=0
-start_auto="off"
+start_auto="on"
+
+# Контроль открытых файловых дескрипторов
+check_fd="off"
+arm64_fd=40000
+other_fd=10000
+delay_fd=60
 
 # Журналирование
 log_info_router() {
     header="$name_app"
     logger -p notice -t "$header" "$1"
+}
+
+log_warning_router() {
+    header="$name_app"
+    logger -p warning -t "$header" "$1"
 }
 
 log_error_router() {
@@ -257,7 +266,6 @@ get_port_redirect() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]')
     if [ -n "${json}" ]; then
-      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
       inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "redirect")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
@@ -280,7 +288,6 @@ get_port_tproxy() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]')
     if [ -n "${json}" ]; then
-      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
       inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "tproxy")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
@@ -303,7 +310,6 @@ get_network_redirect() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]')
     if [ -n "${json}" ]; then
-      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
       inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "redirect")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
@@ -326,7 +332,6 @@ get_network_tproxy() {
   for file in $(find "${directory_user_settings}" -name '*.json'); do
     json=$(cat "${file}" | sed 's/\/\/.*$//' | tr -d '[:space:]') 
     if [ -n "${json}" ]; then
-      #inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and (.tag | contains("dns")) | not)' 2>/dev/null)
       inbounds=$(echo "${json}" | jq -c '.inbounds[] | select(.protocol == "dokodemo-door" and .tag == "tproxy")' 2>/dev/null)
 
       for inbound in ${inbounds}; do
@@ -468,7 +473,6 @@ configure_firewall() {
 
 name_client="${name_client}"
 name_profile="${name_profile}"
-name_client="${name_client}"
 
 mode_proxy="${mode_proxy}"
 network_redirect="${network_redirect}"
@@ -477,7 +481,6 @@ networks="${networks}"
 
 name_prerouting_chain="${name_prerouting_chain}"
 name_output_chain="${name_output_chain}"
-name_profile="${name_profile}"
 port_redirect="${port_redirect}"
 port_tproxy="${port_tproxy}"
 port_donor="${port_donor}"
@@ -500,6 +503,8 @@ directory_user_settings="${directory_user_settings}"
 iptables_supported=${iptables_supported}
 ip6tables_supported=${ip6tables_supported}
 
+arm64_fd=${arm64_fd}
+other_fd=${other_fd}
 
 restart_script() {
     exec /bin/sh "\$0" "\$@"
@@ -664,7 +669,6 @@ then
 						active_table="mangle"
 						if [ "\${family}" = "iptables" ] && [ "\${iptables_supported}" = "true" ] && ! iptables -t "\${active_table}" -C PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1; then
 							iptables -t "\${active_table}" -A PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1
-							iptables -t "\${active_table}" -A PREROUTING -m connmark ! --mark \${policy_mark} -m conntrack ! --ctstate INVALID -p udp -m multiport --dports 53 -j \${name_prerouting_chain} >/dev/null 2>&1
 						fi
 						if [ "\${family}" = "ip6tables" ] && [ "\${ip6tables_supported}" = "true" ] && ! ip6tables -t "\${active_table}" -C PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1; then
 							ip6tables -t "\${active_table}" -A PREROUTING \${connmark_option} -m conntrack ! --ctstate INVALID -p udp \${multiport_option} -j \${name_prerouting_chain} >/dev/null 2>&1
@@ -774,12 +778,14 @@ then
 else
 	export XRAY_LOCATION_ASSET="\${directory_app_routing}"
 	export XRAY_LOCATION_CONFDIR="\${directory_user_settings}"
-	if [ "\${mode_proxy}" != "Redirect" ] || [ "\${mode_proxy}" != "Other" ]; then
-		ulimit -SHn 1000000 && exec su -c "\${name_client} run" "\${name_profile}" &
-	else
-		"\${name_client}" run &
-	fi
-
+                . "/opt/sbin/.xkeen/01_info/03_info_cpu.sh"
+                status_file="/opt/lib/opkg/status"
+                info_cpu
+                if [ "\${architecture}" = "arm64-v8a" ]; then
+                    ulimit -SHn \${arm64_fd} && exec su -c "\${name_client} run" "\${name_profile}" &
+                else
+                    ulimit -SHn \${other_fd} && exec su -c "\${name_client} run" "\${name_profile}" &
+                fi
     sleep 5
 
     restart_script "\$@"
@@ -849,6 +855,26 @@ proxy_status() {
     busybox ps | grep -v grep | grep "${name_client} run" >/dev/null 2>&1
 }
 
+xray_fd() {
+    if ! opkg list-installed | grep -q "^coreutils-nohup"; then
+        opkg update && opkg install coreutils-nohup
+    fi
+    while true; do
+        xray_pid=$(pidof "${name_client}")
+        if [ -n "$xray_pid" ] && [ -d "/proc/$xray_pid/fd" ]; then
+            limit=$(grep 'Max open files' "/proc/${xray_pid}/limits" | awk '{print $4}')
+            current=$(ls -l /proc/$(pidof xray)/fd | wc -l)
+            if [ "$limit" -gt 0 ] && [ "$current" -gt $((limit * 90 / 100)) ]; then
+                log_warning_router "Процесс ${name_client} открыл ${current} файловых дескрипторов из ${limit} доступных, инициирую перезапуск"
+                fd_out=true
+                proxy_stop
+                proxy_start "on"
+            fi
+        fi
+        sleep ${delay_fd}
+    done
+}
+
 # Запуск прокси-клиента
 proxy_start() {
 	local start_manual=${1}
@@ -888,12 +914,25 @@ proxy_start() {
 				xray)
 				export XRAY_LOCATION_ASSET="${directory_app_routing}"
 				export XRAY_LOCATION_CONFDIR="${directory_user_settings}"
-				if [ "${mode_proxy}" != "Redirect" ] || [ "${mode_proxy}" != "Other" ]; then
-					create_user
-					ulimit -SHn 1000000 && exec su -c "${name_client} run" "${name_profile}" &
-				else
-					"${name_client}" run &
-				fi
+                                    create_user
+                                    . "/opt/sbin/.xkeen/01_info/03_info_cpu.sh"
+                                    status_file="/opt/lib/opkg/status"
+                                    info_cpu
+                                    if [ "${architecture}" = "arm64-v8a" ]; then
+                                        if [ -n "${fd_out}" ]; then
+                                            ulimit -SHn ${arm64_fd} && nohup su -c "${name_client} run" "${name_profile}" >/dev/null 2>&1 &
+                                            unset fd_out
+                                        else
+                                            ulimit -SHn ${arm64_fd} && exec su -c "${name_client} run" "${name_profile}" &
+                                        fi
+                                    else
+                                        if [ -n "${fd_out}" ]; then
+                                            ulimit -SHn ${other_fd} && nohup su -c "${name_client} run" "${name_profile}" >/dev/null 2>&1 &
+                                            unset fd_out
+                                        else
+                                            ulimit -SHn ${other_fd} && exec su -c "${name_client} run" "${name_profile}" &
+                                        fi
+                                    fi
 					;;
 				*)
 				"${name_client}" run -C "${directory_user_settings}" &
@@ -910,6 +949,11 @@ proxy_start() {
 				fi
 				echo -e "  Прокси-клиент ${color_green}запущен${color_reset}"
 				log_info_router "Прокси-клиент запущен"
+
+                if [ "${check_fd}" = "on" ] && [ -f "/tmp/start_fd" ] && [ ! -f "/tmp/observer_fd" ]; then
+                    touch "/tmp/observer_fd"
+                    xray_fd &
+                fi
                 return 0
             done
             echo -e "  Прокси-клиент ${color_red}не запустить${color_reset}"
@@ -924,10 +968,10 @@ proxy_start() {
 
 # Остановка прокси-клиента
 proxy_stop() {
-    log_info_router "Инициирована остановка прокси-клиента"	
     if ! proxy_status; then
         echo -e "  Прокси-клиент ${color_red}не запущен${color_reset}"
     else
+        log_info_router "Инициирована остановка прокси-клиента"
         local delay_increment=1
         local current_delay=${start_delay}
 

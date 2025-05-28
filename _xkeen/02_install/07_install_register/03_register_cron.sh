@@ -8,7 +8,7 @@ register_cron_initd() {
     # Определение переменных
     local initd_file="${initd_dir}/S05crond"
     local s05crond_filename="${current_datetime}_S05crond"
-    local required_script_version="0.4"
+    local required_script_version="0.5"
 
     # Проверка наличия файла S05crond
     if [ -e "${initd_file}" ]; then
@@ -30,13 +30,13 @@ register_cron_initd() {
     local script_content='#!/bin/sh
 ### Начало информации о службе
 # Краткое описание: Запуск / Остановка Cron
-# version="0.4"  # Версия скрипта
+# version="0.5"  # Версия скрипта
 ### Конец информации о службе
 
-green="\033[32m"
-red="\033[31m"
-yellow="\033[33m"
-reset="\033[0m" 
+green="\\033[32m"
+red="\\033[31m"
+yellow="\\033[33m"
+reset="\\033[0m" 
 
 cron_initd="/opt/sbin/crond"
 

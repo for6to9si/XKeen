@@ -32,8 +32,8 @@ releases_dir="/opt/releases"
 os_modules="/lib/modules/$(uname -r)"
 user_modules="/opt/lib/modules"
 app_name=XKeen
-xkeen_current_version="1.1.3.3"
-init_current_version="2.20"
+xkeen_current_version="1.1.3.6"
+init_current_version="2.23"
 
 # -------------------------------------
 # Время
@@ -47,7 +47,6 @@ current_datetime=$(date "+%d-%b-%y_%H-%M")
 # -------------------------------------
 # API URL
 # -------------------------------------
-xray_api_url="https://api.github.com/repos/XTLS/Xray-core/releases/latest"	# url api для xray
 xkeen_api_url="https://api.github.com/repos/jameszeroX/xkeen/releases/latest"	# url api для xkeen
 
 # -------------------------------------

@@ -1,8 +1,8 @@
 # Обратная связь в консоль
 
 logs_cpu_info_console() {
-        echo "  Процессор"
-        echo "     Набор инструкций: $architecture"
+        echo ""
+        echo -e "  Набор инструкций процессора: ${yellow}$architecture${reset}"
 	
     if [ -z "$architecture" ]; then
         echo -e "  Процессор ${red}не поддерживается${reset} XKeen"
@@ -86,51 +86,6 @@ logs_delete_geosite_info_console() {
     else
         echo -e "  ${yellow}Проверка${reset} выполнения операции"
         echo -e "$info_content"
-    fi
-}
-
-logs_delete_cron_geofile_info_console() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ug" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления GeoFile удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-            echo -e "$info_content"
-        fi
-    fi
-}
-
-logs_delete_cron_xkeen_info_console() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "uk" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления XKeen удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-			echo -e "$info_content"
-        fi
-    fi
-}
-
-logs_delete_cron_xray_info_console() {
-    local info_content=""
-    
-    if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ux" "$cron_dir/$cron_file"
-        if [ $? -eq 1 ]; then
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления Xray удалена из cron"
-        fi
-        
-        if [ -n "$info_content" ]; then
-			echo -e "$info_content"
-        fi
     fi
 }
 
@@ -572,9 +527,9 @@ logs_delete_cron_geofile_info_console() {
     
     if [ -f "$cron_dir/$cron_file" ]; then
         if grep -q "ug" "$cron_dir/$cron_file"; then
-            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для GeoFile найдена в Cron\n"
+            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления GeoFile не удалена из cron"
         else
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для GeoFile не найдена Cron\n"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления GeoFile удалена из cron"
         fi
         
         if [ -n "$info_content" ]; then
@@ -584,19 +539,21 @@ logs_delete_cron_geofile_info_console() {
         fi
     fi
 }
+
 logs_delete_cron_xkeen_info_console() {
     local info_content=""
     
     if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "uk" "$cron_dir/$cron_file"
-        if [ $? -eq 0 ]; then
-            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для XKeen найдена в Cron\n"
+        if grep -q "uk" "$cron_dir/$cron_file"; then
+            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления XKeen не удалена из cron"
         else
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для XKeen не найдена в Cron\n"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления XKeen удалена из cron"
         fi
         
         if [ -n "$info_content" ]; then
             echo -e "$info_content"
+        elif [ -n "$error_content" ]; then
+            echo -e "$error_content"
         fi
     fi
 }
@@ -605,15 +562,16 @@ logs_delete_cron_xray_info_console() {
     local info_content=""
     
     if [ -f "$cron_dir/$cron_file" ]; then
-        grep -q "ux" "$cron_dir/$cron_file"
-        if [ $? -eq 0 ]; then
-            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления для Xray найдена в Cron\n"
+        if grep -q "ux" "$cron_dir/$cron_file"; then
+            error_content="     ${red}Ошибка:${reset} Задача автоматического обновления Xray не удалена из cron"
         else
-            info_content="     ${green}Успешно:${reset} Задача автоматического обновления для Xray не найдена в Cron\n"
+            info_content="     ${green}Успешно:${reset} Задача автоматического обновления Xray удалена из cron"
         fi
         
         if [ -n "$info_content" ]; then
             echo -e "$info_content"
+        elif [ -n "$error_content" ]; then
+            echo -e "$error_content"
         fi
     fi
 }

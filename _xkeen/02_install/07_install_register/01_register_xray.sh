@@ -82,10 +82,13 @@ register_xray_status() {
 
 register_xray_initd() {
     local initd_file="${initd_dir}/S24xray"
+    local start_file="${initd_dir}/S99xkeenstart"
     local s24xray_filename="${current_datetime}_S24xray"
+    local s99start_filename="${current_datetime}_S99xkeenstart"
     local backup_path="${backups_dir}/${s24xray_filename}"
+    local backup_paths="${backups_dir}/${s99start_filename}"
     local script_file="${xinstall_dir}/07_install_register/04_register_init.sh"
-    local variables_to_extract="name_client name_policy table_id table_mark port_dns ipv4_proxy ipv4_exclude ipv6_proxy ipv6_exclude port_donor port_exclude start_attempts start_delay start_auto"
+    local variables_to_extract="name_client name_policy table_id table_mark port_dns ipv4_proxy ipv4_exclude ipv6_proxy ipv6_exclude port_donor port_exclude start_attempts check_fd arm64_fd other_fd delay_fd"
     local temp_file=$(mktemp)
 
     if [ ! -e "${initd_file}" ]; then
@@ -112,7 +115,12 @@ register_xray_initd() {
 
     if [ "${new_script_version}" != "${script_version}" ]; then
 		mv "${initd_file}" "${backup_path}"
-		echo -e "  Ваш файл «${green}S24xray${reset}» перемещен в каталог резервных копий «${yellow}${backup_path}${reset}»"
+
+		if [ -f "${start_file}" ]; then
+			mv "${start_file}" "${backup_paths}"
+		fi
+
+		echo -e "  Резервная копия файла автозапуска XKeen сохранена в каталоге «${yellow}${backups_dir}${reset}»"
 
 		cat "${script_file}" > "${initd_file}"
 
@@ -132,23 +140,19 @@ register_xray_initd() {
 
 register_autostart() {
     rm -f "${initd_dir}/S99xkeenrestart"
-    if [ -d "${initd_dir}/S99xkeenstart" ]; then
+    if [ -f "${initd_dir}/S99xkeenstart" ]; then
         rm "${initd_dir}/S99xkeenstart"
     fi
-    if grep -q 'start_auto="on"' $initd_dir/S24xray; then
-        sed -i 's/start_auto="on"/start_auto="off"/' $initd_dir/S24xray
-    fi
-    update_start_delay 0
     cat << EOF > "${initd_dir}/S99xkeenstart"
 #!/bin/sh
 #
 autostart="on"
-start_delay=30
+start_delay=20
 #
 log_info_router() {
     logger -p notice -t "XKeen" "\$1"
 }
-if [ -d "/opt/etc/init.d/S99xkeenrestart" ]; then
+if [ -f "/opt/etc/init.d/S99xkeenrestart" ]; then
   rm "/opt/etc/init.d/S99xkeenrestart"
 fi
 if [ "\${autostart}" = "on" ]; then
@@ -157,9 +161,10 @@ if [ "\${autostart}" = "on" ]; then
         log_info_router "Проверка доступности интернета"
         ping -c 1 "\$HOST" > /dev/null 2>&1
         if [ \$? -eq 0 ]; then
-        log_info_router "Интернет доступен, выполняется запуск проксирования"
+            log_info_router "Интернет доступен, выполняется запуск проксирования"
+            touch "/tmp/start_fd"
             sleep \$start_delay
-            xkeen -start
+            /opt/etc/init.d/S24xray restart on
             break
         else
             log_info_router "Интернет не доступен, ожидание доступности..."
@@ -173,12 +178,15 @@ EOF
     chmod 755 "${initd_dir}/S99xkeenstart"
 }
 
-# Обновление cron задач для GeoFile
+# Обновление cron задач
 update_cron_geofile_task() {
-if [ -f "$cron_dir/$cron_file" ]; then
-    tmp_file="$cron_dir/${cron_file}.tmp"
-    cp "$cron_dir/$cron_file" "$tmp_file"
-    grep -v "ugi" "$tmp_file" > "$cron_dir/$cron_file"
-    sed -i 's/\bugs\b/ug/g' "$cron_dir/$cron_file"
-fi
+    if [ -f "$cron_dir/$cron_file" ]; then
+        tmp_file="$cron_dir/${cron_file}.tmp"
+        cp "$cron_dir/$cron_file" "$tmp_file"
+        if [ -z "$chose_canel_cron_select" ]; then
+            grep -v "ug" "$tmp_file" | grep -v "ux" | grep -v "uk" | sed '/^\s*$/d' > "$cron_dir/$cron_file"
+        else
+            grep -v "ugi" "$tmp_file" | grep -v "ugs" | grep -v "ux" | grep -v "uk" | sed '/^\s*$/d' > "$cron_dir/$cron_file"
+        fi
+    fi
 }

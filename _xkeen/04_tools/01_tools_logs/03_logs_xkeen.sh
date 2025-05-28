@@ -9,11 +9,17 @@ logs_packages_info_xkeen() {
     else
         error_content="${error_content}    [error] lscpu не установлен\n"
     fi
-	
+
 	if [ "$info_packages_uname" = "installed" ]; then
         info_content="${info_content}    [info] coreutils-uname установлен\n"
     else
         error_content="${error_content}    [error] coreutils-uname не установлен\n"
+    fi
+
+	if [ "$info_packages_nohup" = "installed" ]; then
+        info_content="${info_content}    [info] coreutils-nohup установлен\n"
+    else
+        error_content="${error_content}    [error] coreutils-nohup не установлен\n"
     fi
 
     if [ "$info_packages_curl" = "installed" ]; then
@@ -79,9 +85,9 @@ logs_cpu_info_xkeen() {
     local error_content=""
 
     if [ -n "$architecture" ]; then
-        info_content="    [info] Набор инструкций: $architecture\n"
+        info_content="    [info] Набор инструкций процессора: $architecture\n"
     else
-        error_content="    [error] Набор инструкций: Не удалось определить\n"
+        error_content="    [error] Набор инструкций процессора: Не удалось определить\n"
     fi
 
     if [ -n "$architecture" ]; then
@@ -101,7 +107,6 @@ logs_cpu_info_xkeen() {
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
         echo "[start] Проверка процессора" >> "$xkeen_info_log"
-        echo "    [info] Процессор" >> "$xkeen_info_log"
         echo -e "$info_content" | sed '/^$/d' >> "$xkeen_info_log"
         echo "[end] Проверка процессора выполнена" >> "$xkeen_info_log"
 		echo "" >> "$xkeen_info_log"
@@ -307,7 +312,7 @@ logs_version_xray_info_xkeen() {
     local info_content=""
     local error_content=""
 
-    info_content="\t[info] Установленная версия xray: $xray_current_version\n\t[info] GitHub версия xray: $xray_github_version"
+    info_content="\t[info] Установленная версия xray: $xray_current_version\n"
 
     if [ -n "$info_content" ]; then
         echo "" >> "$xkeen_info_log"
@@ -334,9 +339,6 @@ logs_compare_xray_info_xkeen() {
         info_content="\t[info] Текущая версия $xray_current_version xray актуальна"
     elif [ "$info_compare_xray" = "update" ]; then
         info_content="\t[info] Текущая версия xray $xray_current_version."
-        info_content="\t[info] Доступно обновление на версию $xray_github_version"
-    else
-        info_content="\t[info] Текущая версия xray $xray_current_version новее доступной на github $xray_github_version"
     fi
 
     if [ -n "$info_content" ]; then
@@ -364,6 +366,10 @@ logs_install_packages_xkeen() {
     
 	if [ "$info_packages_uname" = "installed" ]; then
 			info_content="${info_content}\t[info] coreutils-uname установлен"
+    fi
+
+	if [ "$info_packages_nohup" = "installed" ]; then
+			info_content="${info_content}\t[info] coreutils-nohup установлен"
     fi
 	
     if [ "$info_packages_curl" = "installed" ]; then

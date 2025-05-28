@@ -18,6 +18,10 @@ info_packages_lscpu=$package_status
 info_packages "coreutils-uname"
 info_packages_uname=$package_status
 
+# Проверка наличия пакета "coreutils-nohup"
+info_packages "coreutils-nohup"
+info_packages_nohup=$package_status
+
 # Проверка наличия пакета "curl"
 info_packages "curl"
 info_packages_curl=$package_status

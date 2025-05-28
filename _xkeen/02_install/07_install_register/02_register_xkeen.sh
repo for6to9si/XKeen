@@ -9,7 +9,7 @@ register_xkeen_control() {
     cat << EOF > "$register_dir/xkeen.control"
 Package: xkeen
 Version: $xkeen_current_version
-Depends: jq, curl, lscpu, coreutils-uname, iptables
+Depends: jq, curl, lscpu, coreutils-uname, coreutils-nohup, iptables
 Source: Skrill
 SourceName: xkeen
 Section: net
@@ -47,7 +47,7 @@ register_xkeen_status() {
     # Генерация новой записи
     echo "Package: xkeen" > new_entry.txt
     echo "Version: $xkeen_current_version" >> new_entry.txt
-    echo "Depends: jq, curl, lscpu, coreutils-uname, iptables" >> new_entry.txt
+    echo "Depends: jq, curl, lscpu, coreutils-uname, coreutils-nohup, iptables" >> new_entry.txt
     echo "Status: install user installed" >> new_entry.txt
     echo "Architecture: $status_architecture" >> new_entry.txt
     echo "Installed-Time: $(date +%s)" >> new_entry.txt	

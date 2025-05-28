@@ -2,37 +2,37 @@
   "routing": {
     "rules": [
 //
-      /* Блокировка QUIC */
-      {
-        "network": "udp",
-        "port": "443",
-        "outboundTag": "block"
-      },
-//            
-      /* Проксируемые домены */
+      // Российские домены через провайдера
       {
         "domain": [
-          "browserleaks.com",
-          "browserleaks.org",
-          "browserleaks.net",
-          "ip.me"
+          "xn--",
+          "regexp:^([\\w\\-\\.]+\\.)su$",
+          "regexp:^([\\w\\-\\.]+\\.)ru$",
+          "regexp:^([\\w\\-\\.]+\\.)by$",
+          "regexp:^([\\w\\-\\.]+\\.)moscow$",
+          "yandex",
+          "dzen.ru",
+          "domain:ya.ru",
+          "yastatic.net",
+          "tricolor.tv",
+          "ntvplus.tv"
         ],
-        "outboundTag": "vless-reality"
+        "outboundTag": "direct"
       },
 //
-      /* Проксируемые IP */
+      // Российские IP через провайдера
       {
         "ip": [
-          "178.62.9.171" /* myip.ru */
+//          "ext:geoip_zkeenip.dat:ru",    // Перед использованием загрузите базу zkeenip.dat
+          "23.128.64.150" // seeip.org
         ],
-        "outboundTag": "vless-reality"
+        "outboundTag": "direct"
       },
-//	  
-      /* Остальной трафик через провайдера */
-      /* Эту секцию редактировать НЕЛЬЗЯ */
+//
+      // Остальной трафик через прокси
       {
         "network": "tcp,udp",
-        "outboundTag": "direct"
+        "outboundTag": "vless-reality"
       }
 //
     ]

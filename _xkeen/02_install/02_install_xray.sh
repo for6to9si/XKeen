@@ -19,6 +19,10 @@ install_xray() {
         fi
 
         # Распаковка архива xray
+        if [ -d "${xtmp_dir}/xray" ]; then
+            rm -r "${xtmp_dir}/xray"
+        fi
+
         if unzip -q "${xray_archive}" -d "${xtmp_dir}/xray"; then
             info_content="${info_content}[info] Распаковка архива xray выполнена\n"
             

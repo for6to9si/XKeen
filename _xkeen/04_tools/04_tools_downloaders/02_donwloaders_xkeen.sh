@@ -12,7 +12,7 @@ download_xkeen() {
         # Создание временной директории для загрузки файла
         mkdir -p "$tmp_dir"
         
-        echo -e "  ${yellow}Выполняется загрузка${reset} последней версии XKeen"
+        echo -e "  ${yellow}Выполняется загрузка${reset} новой версии XKeen"
 
         # Загрузка файла с использованием cURL и сохранение его во временной директории
         curl -L -o "/tmp/$filename" "$download_url" &> /dev/null
